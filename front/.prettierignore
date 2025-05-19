@@ -1,0 +1,11 @@
+# Ignore out : 
+dist/
+*.json
+*.log
+*.md
+ios/
+android/
+node_modules/
+
+# Ignore vendor :
+src/vendor/
