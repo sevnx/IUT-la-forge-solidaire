@@ -10,83 +10,240 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root';
-import { Route as AboutImport } from './routes/about';
-import { Route as IndexImport } from './routes/index';
+import { Route as rootRoute } from './routes/__root'
+import { Route as UserImport } from './routes/user'
+import { Route as SearchImport } from './routes/search'
+import { Route as AuthImport } from './routes/auth'
+import { Route as IndexImport } from './routes/index'
+import { Route as UserToolsImport } from './routes/user.tools'
+import { Route as UserBorrowsImport } from './routes/user.borrows'
+import { Route as AuthRegisterImport } from './routes/auth.register'
+import { Route as AuthLoginImport } from './routes/auth.login'
 
 // Create/Update Routes
 
-const AboutRoute = AboutImport.update({
-  id: '/about',
-  path: '/about',
+const UserRoute = UserImport.update({
+  id: '/user',
+  path: '/user',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
+
+const SearchRoute = SearchImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthRoute = AuthImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any);
+} as any)
+
+const UserToolsRoute = UserToolsImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => UserRoute,
+} as any)
+
+const UserBorrowsRoute = UserBorrowsImport.update({
+  id: '/borrows',
+  path: '/borrows',
+  getParentRoute: () => UserRoute,
+} as any)
+
+const AuthRegisterRoute = AuthRegisterImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthLoginRoute = AuthLoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
-      id: '/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof IndexImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/about': {
-      id: '/about';
-      path: '/about';
-      fullPath: '/about';
-      preLoaderRoute: typeof AboutImport;
-      parentRoute: typeof rootRoute;
-    };
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchImport
+      parentRoute: typeof rootRoute
+    }
+    '/user': {
+      id: '/user'
+      path: '/user'
+      fullPath: '/user'
+      preLoaderRoute: typeof UserImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginImport
+      parentRoute: typeof AuthImport
+    }
+    '/auth/register': {
+      id: '/auth/register'
+      path: '/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof AuthRegisterImport
+      parentRoute: typeof AuthImport
+    }
+    '/user/borrows': {
+      id: '/user/borrows'
+      path: '/borrows'
+      fullPath: '/user/borrows'
+      preLoaderRoute: typeof UserBorrowsImport
+      parentRoute: typeof UserImport
+    }
+    '/user/tools': {
+      id: '/user/tools'
+      path: '/tools'
+      fullPath: '/user/tools'
+      preLoaderRoute: typeof UserToolsImport
+      parentRoute: typeof UserImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface AuthRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthRegisterRoute: AuthRegisterRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
+interface UserRouteChildren {
+  UserBorrowsRoute: typeof UserBorrowsRoute
+  UserToolsRoute: typeof UserToolsRoute
+}
+
+const UserRouteChildren: UserRouteChildren = {
+  UserBorrowsRoute: UserBorrowsRoute,
+  UserToolsRoute: UserToolsRoute,
+}
+
+const UserRouteWithChildren = UserRoute._addFileChildren(UserRouteChildren)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute;
-  '/about': typeof AboutRoute;
+  '/': typeof IndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/search': typeof SearchRoute
+  '/user': typeof UserRouteWithChildren
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/user/borrows': typeof UserBorrowsRoute
+  '/user/tools': typeof UserToolsRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute;
-  '/about': typeof AboutRoute;
+  '/': typeof IndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/search': typeof SearchRoute
+  '/user': typeof UserRouteWithChildren
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/user/borrows': typeof UserBorrowsRoute
+  '/user/tools': typeof UserToolsRoute
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  '/': typeof IndexRoute;
-  '/about': typeof AboutRoute;
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/search': typeof SearchRoute
+  '/user': typeof UserRouteWithChildren
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/user/borrows': typeof UserBorrowsRoute
+  '/user/tools': typeof UserToolsRoute
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/' | '/about';
-  fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/about';
-  id: '__root__' | '/' | '/about';
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/search'
+    | '/user'
+    | '/auth/login'
+    | '/auth/register'
+    | '/user/borrows'
+    | '/user/tools'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/auth'
+    | '/search'
+    | '/user'
+    | '/auth/login'
+    | '/auth/register'
+    | '/user/borrows'
+    | '/user/tools'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/search'
+    | '/user'
+    | '/auth/login'
+    | '/auth/register'
+    | '/user/borrows'
+    | '/user/tools'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  AboutRoute: typeof AboutRoute;
+  IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  SearchRoute: typeof SearchRoute
+  UserRoute: typeof UserRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-};
+  AuthRoute: AuthRouteWithChildren,
+  SearchRoute: SearchRoute,
+  UserRoute: UserRouteWithChildren,
+}
 
-export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -95,14 +252,46 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about"
+        "/auth",
+        "/search",
+        "/user"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/about": {
-      "filePath": "about.tsx"
+    "/auth": {
+      "filePath": "auth.tsx",
+      "children": [
+        "/auth/login",
+        "/auth/register"
+      ]
+    },
+    "/search": {
+      "filePath": "search.tsx"
+    },
+    "/user": {
+      "filePath": "user.tsx",
+      "children": [
+        "/user/borrows",
+        "/user/tools"
+      ]
+    },
+    "/auth/login": {
+      "filePath": "auth.login.tsx",
+      "parent": "/auth"
+    },
+    "/auth/register": {
+      "filePath": "auth.register.tsx",
+      "parent": "/auth"
+    },
+    "/user/borrows": {
+      "filePath": "user.borrows.tsx",
+      "parent": "/user"
+    },
+    "/user/tools": {
+      "filePath": "user.tools.tsx",
+      "parent": "/user"
     }
   }
 }
