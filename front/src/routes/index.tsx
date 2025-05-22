@@ -1,4 +1,4 @@
-import GuestNavbar from '@/components/navbars/GuestNavbar';
+import GuestNav from '@/components/navbars/GuestNav';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
@@ -6,7 +6,5 @@ export const Route = createFileRoute('/')({
 });
 
 function Index() {
-  return (
-    <GuestNavbar />
-  );
+  return <GuestNav />;
 }
