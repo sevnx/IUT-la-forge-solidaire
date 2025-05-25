@@ -87,5 +87,4 @@ public class JwtService implements ITokenService{
         Objects.requireNonNull(audience, "Token audience must not be null");
         Objects.requireNonNull(secretKey, "Secret key must not be null");
     }
-
 }

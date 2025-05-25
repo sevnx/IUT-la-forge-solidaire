@@ -3,13 +3,14 @@ package desforge.dev.entities;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name="users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idUser;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID idUser;
 
     @Column(unique=true)
     private String username;
@@ -29,8 +30,12 @@ public class User {
 
     public User(){}
 
-    public int getIdUser() {
+    public UUID getIdUser() {
         return idUser;
+    }
+
+    public void setIdUser(UUID idUser) {
+        this.idUser = idUser;
     }
 
     public String getUsername() {

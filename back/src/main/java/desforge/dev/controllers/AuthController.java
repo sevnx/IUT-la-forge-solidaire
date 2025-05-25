@@ -3,6 +3,7 @@ package desforge.dev.controllers;
 import desforge.dev.errors.RegisterException;
 import desforge.dev.models.auth.LoginRequest;
 import desforge.dev.models.auth.RegisterRequest;
+import desforge.dev.repositories.UserRepository;
 import desforge.dev.services.IAuthService;
 import desforge.dev.services.ICookieService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,10 +30,9 @@ public class AuthController {
     @Value("${cookie.expiration}")
     private int cookieExpirationMs;
 
-
     /*
+    * The endpoint used to register a user.
     * @param registerRequest
-    * @return registerResponse
     */
     @PostMapping(value = "/register", produces = "application/json")
     public void registerUser(@Valid @RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
@@ -47,6 +47,10 @@ public class AuthController {
         }
     }
 
+    /*
+     * The endpoint used to log a user.
+     * @param loginRequest
+     */
     @PostMapping(value = "/login", produces = "application/json")
     public void loginUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         try {
