@@ -1,8 +1,8 @@
-package desforge.dev.modals.auth;
+package desforge.dev.models.auth;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class LoginRequest {
+public class RegisterRequest {
 
     @NotBlank
     private String login;
@@ -10,7 +10,10 @@ public class LoginRequest {
     @NotBlank
     private String password;
 
-    public LoginRequest() {
+    @NotBlank
+    private String address;
+
+    public RegisterRequest() {
     }
 
     public String getLogin() {
@@ -28,4 +31,13 @@ public class LoginRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
 }

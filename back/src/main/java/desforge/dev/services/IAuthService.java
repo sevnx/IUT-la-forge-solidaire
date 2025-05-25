@@ -1,11 +1,12 @@
 package desforge.dev.services;
 
 import desforge.dev.errors.RegisterException;
-import desforge.dev.modals.auth.RegisterRequest;
+import desforge.dev.models.auth.LoginRequest;
+import desforge.dev.models.auth.RegisterRequest;
 
 public interface IAuthService {
 
-    public String register(RegisterRequest registerRequest) throws RegisterException;
+    public String login(LoginRequest request) ;
 
-    //public String login(RegisterRequest registerRequest);
+    public String register(RegisterRequest registerRequest) throws RegisterException;
 }

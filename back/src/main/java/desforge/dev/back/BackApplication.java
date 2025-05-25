@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "desforge.dev.controllers, desforge.dev.security," +
-        "desforge.dev.services, desforge.dev.modals" )
+        "desforge.dev.services, desforge.dev.modals, desforge.dev.configuration" )
 @EnableJpaRepositories(basePackages = "desforge.dev.repositories")
 @EntityScan(basePackages = "desforge.dev.entities")
 public class BackApplication {

@@ -1,13 +1,18 @@
 package desforge.dev.controllers;
 
-import desforge.dev.entities.User;
 import desforge.dev.errors.RegisterException;
-import desforge.dev.modals.auth.RegisterRequest;
-import desforge.dev.modals.auth.RegisterResponse;
+import desforge.dev.models.auth.LoginRequest;
+import desforge.dev.models.auth.RegisterRequest;
 import desforge.dev.services.IAuthService;
+import desforge.dev.services.ICookieService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -15,23 +20,43 @@ public class AuthController {
     @Autowired
     private IAuthService authService;
 
+    @Autowired
+    private ICookieService cookieService;
+
+    @Value("${cookie.name}")
+    private String cookieName;
+
+    @Value("${cookie.expiration}")
+    private int cookieExpirationMs;
+
+
     /*
     * @param registerRequest
     * @return registerResponse
     */
     @PostMapping(value = "/register", produces = "application/json")
-    public RegisterResponse registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        RegisterResponse response = new RegisterResponse();
+    public void registerUser(@Valid @RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
         try {
-            response.setToken(authService.register(registerRequest));
-            return response;
+            String token = authService.register(registerRequest);
+
+            ResponseCookie cookie = cookieService.addCookie(cookieName, token, cookieExpirationMs);
+
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         } catch (RegisterException e) {
-            throw new RuntimeException(e);
+            throw new RegisterException("Register failed: " + e.getMessage());
         }
     }
 
     @PostMapping(value = "/login", produces = "application/json")
-    public User loginUser(@RequestBody User user) {
-        return user;
+    public void loginUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        try {
+            String token = authService.login(loginRequest);
+
+            ResponseCookie cookie = cookieService.addCookie(cookieName, token, cookieExpirationMs);
+
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        } catch (RegisterException e) {
+            throw new RegisterException("login failed: " + e.getMessage());
+        }
     }
 }

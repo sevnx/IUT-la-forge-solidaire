@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.CONFLICT)
-public class RegisterException extends RuntimeException {
-    public RegisterException(String message) {
+public class LoginException extends RuntimeException {
+    public LoginException(String message) {
         super(message);
     }
 }
