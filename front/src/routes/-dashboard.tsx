@@ -1,7 +1,5 @@
+import DashboardNav from '@/components/navbars/DashboardNav';
+
 export function DashboardComponent() {
-  return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
-  );
+  return <DashboardNav />;
 }

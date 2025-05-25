@@ -1,7 +1,13 @@
+import GuestNav from '@/components/navbars/GuestNav';
+import { HowItWorksSection } from '@/components/sections/how-it-works/HowItWorks';
+
 export function LandingComponent() {
   return (
-    <div>
-      <h1>Landing</h1>
-    </div>
+    <>
+      <GuestNav />
+      <div className="flex flex-col items-center">
+        <HowItWorksSection />
+      </div>
+    </>
   );
 }

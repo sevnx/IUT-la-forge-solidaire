@@ -3,8 +3,12 @@ import Nav, { NavLink } from '../core/Nav';
 const GuestNav = () => {
   return (
     <Nav>
-      <NavLink to="/search">Search</NavLink>
-      <NavLink to="/auth/login">Login</NavLink>
+      <NavLink to="/search" variant="default">
+        Rechercher des outils
+      </NavLink>
+      <NavLink to="/auth/login" variant="primary">
+        Se connecter
+      </NavLink>
     </Nav>
   );
 };

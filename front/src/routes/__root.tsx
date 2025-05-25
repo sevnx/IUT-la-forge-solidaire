@@ -1,11 +1,15 @@
+import { ApiContext } from '@/context/ApiContext';
+import { AuthProvider } from '@/context/AuthContext';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
 export const Route = createRootRoute({
   component: () => (
-    <>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
+    <AuthProvider>
+      <ApiContext>
+        <Outlet />
+        <TanStackRouterDevtools />
+      </ApiContext>
+    </AuthProvider>
   ),
 });
