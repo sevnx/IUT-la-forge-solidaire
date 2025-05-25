@@ -6,13 +6,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 
 export const Route = createFileRoute('/auth/login')({
   component: RouteComponent,
 });
 
 const Login = type({
-  login: type.string.atLeastLength(1).configure({
+  username: type.string.atLeastLength(1).configure({
     message: 'L\'identifiant est requis',
   }),
   password: type.string.atLeastLength(1).configure({
@@ -22,20 +23,18 @@ const Login = type({
 
 function RouteComponent() {
   const [message, setMessage] = useState<string | null>(null);
+  const { login } = useAuth();
 
   const form = useForm<typeof Login.infer>({
     resolver: arktypeResolver(Login),
     defaultValues: {
-      login: '',
+      username: '',
       password: '',
     },
   });
 
-  const onSubmit = (data: typeof Login.infer) => {
-    console.log(data);
-    form.setError('login', {});
-    form.setError('password', {});
-    setMessage('Le mot de passe ou l\'identifiant est incorrect');
+  const onSubmit = async (data: typeof Login.infer) => {
+    await login(data);
   };
 
   const clearMessage = () => {
@@ -49,7 +48,7 @@ function RouteComponent() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name="login"
+          name="username"
           render={({ field }) => (
             <FormItem className="mt-6">
               <FormLabel>Identifiant</FormLabel>

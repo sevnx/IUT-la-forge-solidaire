@@ -1,24 +1,18 @@
 import { cn } from '@/lib/utils';
 import type { FileRoutesByFullPath } from '@/routeTree.gen';
+import { navigationItemVariants } from '@/types';
 import { Link } from '@tanstack/react-router';
 
 interface NavLinkProps {
   to: keyof FileRoutesByFullPath;
   children: React.ReactNode;
   className?: string;
-  variant?: 'default' | 'primary';
+  variant?: keyof typeof navigationItemVariants;
 }
 
 export const NavLink: React.FC<NavLinkProps> = ({ to, children, className, variant = 'default' }) => {
-  const variants = {
-    default:
-      'text-gray-700 hover:text-gray-900 hover:bg-gray-50 px-6 py-3 rounded-lg text-base font-medium transition-colors duration-200',
-    primary:
-      'bg-black text-white hover:bg-gray-800 px-8 py-3.5 rounded-lg text-base font-medium transition-colors duration-200 shadow-sm',
-  };
-
   return (
-    <Link to={to} className={cn(variants[variant], className)}>
+    <Link to={to} className={cn(navigationItemVariants[variant], className)}>
       {children}
     </Link>
   );

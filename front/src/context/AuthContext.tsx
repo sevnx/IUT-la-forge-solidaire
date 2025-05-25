@@ -44,6 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const login = (credentials: LoginRequest): ResultAsync<void, LoginError> => {
+    setState(AuthState.LoggedIn);
     return loginApi(credentials).andThen(() => {
       setState(AuthState.LoggedIn);
       return ResultAsync.fromSafePromise(Promise.resolve());
@@ -51,6 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = (): ResultAsync<void, LogoutError> => {
+    setState(AuthState.LoggedOut);
     return logoutApi().andThen(() => {
       setState(AuthState.LoggedOut);
       return ResultAsync.fromSafePromise(Promise.resolve());
