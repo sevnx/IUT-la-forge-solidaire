@@ -27,7 +27,6 @@ public class AuthService implements IAuthService {
     private PasswordEncoder passwordEncoder;
 
     /*
-    *
     * @param request the login model
     * @return the token
     */

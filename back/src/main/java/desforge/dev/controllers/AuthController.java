@@ -63,4 +63,14 @@ public class AuthController {
             throw new RegisterException("login failed: " + e.getMessage());
         }
     }
+
+    /*
+    * Log out a user
+    * @param response
+    */
+    @PostMapping(value = "/logout")
+    public void logoutUser(HttpServletResponse response) {
+        ResponseCookie cookie = cookieService.removeCookie(cookieName);
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
 }

@@ -17,4 +17,15 @@ public class CookieService implements ICookieService {
                 .sameSite(SameSiteCookies.STRICT.toString())
                 .build();
     }
+
+    @Override
+    public ResponseCookie removeCookie(String name) {
+        return ResponseCookie.from(name, null)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite(SameSiteCookies.STRICT.toString())
+                .build();
+    }
 }
