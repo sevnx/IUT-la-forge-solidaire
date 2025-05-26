@@ -7,7 +7,7 @@ export interface CardProps {
   icon: LucideIcon;
   title: string;
   description: string;
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
 }
 

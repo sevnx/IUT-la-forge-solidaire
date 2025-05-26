@@ -8,9 +8,11 @@ export const Route = createRootRoute({
   component: () => (
     <AuthProvider>
       <ApiContext>
-        <Outlet />
-        <TanStackRouterDevtools />
-        <Footer />
+        <div className="flex flex-col min-h-screen">
+          <Outlet />
+          <TanStackRouterDevtools />
+          <Footer />
+        </div>
       </ApiContext>
     </AuthProvider>
   ),

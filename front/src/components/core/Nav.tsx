@@ -32,11 +32,9 @@ export const Nav: React.FC<NavProps> = ({ logoImgSrc = '/logo.png', logoAltText 
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center pl-4">
-            {logoImgSrc ? (
-              <img className="h-14 w-auto" src={logoImgSrc} alt={logoAltText} />
-            ) : (
-              <div className="text-gray-900 text-2xl font-bold">BricoPartage</div>
-            )}
+            <Link to="/">
+              <img className="h-14 w-auto cursor-pointer" src={logoImgSrc} alt={logoAltText} />
+            </Link>
           </div>
 
           {/* Navigation Links */}

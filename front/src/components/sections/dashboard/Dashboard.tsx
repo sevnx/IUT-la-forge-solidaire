@@ -1,4 +1,4 @@
-import { Card, type CardProps } from '@/components/elements/Card';
+import { Card, type CardProps } from '@/components/core/Card';
 import { useRouter } from '@tanstack/react-router';
 import { Handshake, SearchIcon, WrenchIcon } from 'lucide-react';
 
@@ -33,8 +33,8 @@ export function Dashboard() {
   ];
 
   return (
-    <div className="px-20">
-      <div className="flex flex-row gap-4 w-full justify-center items-center my-5 px-0">
+    <div className="flex-grow flex items-center justify-center px-20">
+      <div className="flex flex-row gap-4 w-full justify-center items-center">
         {pages.map((page) => (
           <Card key={page.title} {...page} className="flex-1" />
         ))}

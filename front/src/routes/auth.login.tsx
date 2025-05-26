@@ -14,7 +14,7 @@ export const Route = createFileRoute('/auth/login')({
 
 const Login = type({
   username: type.string.atLeastLength(1).configure({
-    message: 'L\'identifiant est requis',
+    message: "L'identifiant est requis",
   }),
   password: type.string.atLeastLength(1).configure({
     message: 'Le mot de passe est requis',
@@ -53,7 +53,13 @@ function RouteComponent() {
             <FormItem className="mt-6">
               <FormLabel>Identifiant</FormLabel>
               <FormControl>
-                <Input {...field} onChange={(e) => { field.onChange(e); clearMessage(); }} />
+                <Input
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    clearMessage();
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -66,7 +72,14 @@ function RouteComponent() {
             <FormItem className="mt-6">
               <FormLabel>Mot de passe</FormLabel>
               <FormControl>
-                <Input {...field} onChange={(e) => { field.onChange(e); clearMessage(); }} />
+                <Input
+                  type="password"
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    clearMessage();
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,7 +91,9 @@ function RouteComponent() {
         </Button>
         <p className="text-sm text-muted-foreground mt-8">
           Vous n'avez pas de compte ?
-          <Link to="/auth/register" className="text-red-500 font-medium ml-1">Créer un compte</Link>
+          <Link to="/auth/register" className="text-red-500 font-medium ml-1">
+            Créer un compte
+          </Link>
         </p>
       </form>
     </Form>

@@ -9,7 +9,7 @@ export const Route = createFileRoute('/auth')({
 function RouteComponent() {
   return (
     <AuthRedirector expectedState={AuthState.LoggedOut} fallbackRoute="/">
-      <div className="flex flex-col items-center justify-center w-full h-screen bg-muted">
+      <div className="flex flex-grow flex-col items-center justify-center w-full bg-muted">
         <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
           <div className="flex justify-center mb-6">
             <img src="/logo-icon.png" alt="logo" className="w-12 h-12" />

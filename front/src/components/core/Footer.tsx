@@ -1,8 +1,8 @@
 export function Footer() {
   return (
-    <footer className="w-full py-6 bg-muted border-t">
-      <div className="container mx-auto text-center">
-        <p className="text-sm text-muted-foreground">© DesForge 2025 - Tous droits réservés</p>
+    <footer className="w-full bg-gray-900 text-white">
+      <div className="border-gray-800 py-5 text-center text-gray-400">
+        <p>&copy; {new Date().getFullYear()} La Forge Solidaire. Tous droits réservés.</p>
       </div>
     </footer>
   );
