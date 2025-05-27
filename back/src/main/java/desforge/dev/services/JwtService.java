@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,19 +26,22 @@ public class JwtService implements ITokenService{
     @Value("${jwt.expiration}")
     private int jwtExpirationMs;
 
+    private SecretKey secretKey;
+    @PostConstruct
+    public void init() {
+        this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    }
+
     @Override
-    public String generateToken(String subject, String audience,
-                                SecretKey secretKey) {
-        validateInputs(subject, audience, secretKey);
+    public String generateToken(String subject) {
+        validateInputs(subject);
 
         Date issuedAt = new Date();
         Date expiration = new Date(issuedAt.getTime() + jwtExpirationMs * 1000L);
 
         return Jwts.builder()
                 .subject(subject)
-                .id(UUID.randomUUID().toString())
                 .audience()
-                .add(audience)
                 .and()
                 .issuedAt(issuedAt)
                 .notBefore(issuedAt)
@@ -47,15 +51,7 @@ public class JwtService implements ITokenService{
     }
 
     @Override
-    public SecretKey generateSecretKey() {
-        if (Objects.isNull(jwtSecret) || jwtSecret.trim().isEmpty()) {
-            throw new IllegalArgumentException("Authentication signing key is missing.");
-        }
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public String getUsernameFromToken(String token, SecretKey secretKey) {
+    public String getUsernameFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey).build()
                 .parseSignedClaims(token)
@@ -64,27 +60,18 @@ public class JwtService implements ITokenService{
     }
 
     @Override
-    public boolean validateJwtToken(String token, SecretKey secretKey) {
+    public boolean validateJwtToken(String token) throws SecurityException, MalformedJwtException,
+            ExpiredJwtException, UnsupportedJwtException, IllegalArgumentException {
         try {
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
             return true;
-        } catch (SecurityException e) {
-            System.out.println("Invalid JWT signature: " + e.getMessage());
-        } catch (MalformedJwtException e) {
-            System.out.println("Invalid JWT token: " + e.getMessage());
-        } catch (ExpiredJwtException e) {
-            System.out.println("JWT token is expired: " + e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            System.out.println("JWT token is unsupported: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            System.out.println("JWT claims string is empty: " + e.getMessage());
+        }catch (Exception e) {
+            return false;
         }
-        return false;
     }
 
-    private void validateInputs(String subject, String audience, SecretKey secretKey) {
+    private void validateInputs(String subject) {
         Objects.requireNonNull(subject, "Token subject must not be null");
-        Objects.requireNonNull(audience, "Token audience must not be null");
         Objects.requireNonNull(secretKey, "Secret key must not be null");
     }
 }

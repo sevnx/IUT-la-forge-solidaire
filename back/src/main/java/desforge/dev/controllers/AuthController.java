@@ -1,5 +1,6 @@
 package desforge.dev.controllers;
 
+import desforge.dev.errors.LoginException;
 import desforge.dev.errors.RegisterException;
 import desforge.dev.models.auth.LoginRequest;
 import desforge.dev.models.auth.RegisterRequest;
@@ -59,8 +60,8 @@ public class AuthController {
             ResponseCookie cookie = cookieService.addCookie(cookieName, token, cookieExpirationMs);
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        } catch (RegisterException e) {
-            throw new RegisterException("login failed: " + e.getMessage());
+        } catch (LoginException e) {
+            throw new LoginException("login failed: " + e.getMessage());
         }
     }
 

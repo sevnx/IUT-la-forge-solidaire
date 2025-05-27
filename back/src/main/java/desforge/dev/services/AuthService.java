@@ -1,6 +1,5 @@
 package desforge.dev.services;
 
-import java.util.UUID;
 
 import desforge.dev.entities.User;
 import desforge.dev.errors.LoginException;
@@ -9,10 +8,12 @@ import desforge.dev.models.auth.LoginRequest;
 import desforge.dev.models.auth.RegisterRequest;
 import desforge.dev.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
+import java.util.Optional;
+
 
 @Service
 public class AuthService implements IAuthService {
@@ -26,25 +27,32 @@ public class AuthService implements IAuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ICookieService cookieService;
+
+    @Value("${cookie.name}")
+    private String cookieName;
+
+    @Value("${cookie.expiration}")
+    private int cookieExpirationMs;
+
     /*
     * @param request the login model
     * @return the token
     */
     public String login(LoginRequest request) {
         String login = request.getLogin();
-        User user = userRepository.findByUsername(login);
+        Optional<User> userOpt = userRepository.findByUsername(login);
 
-        if (user == null) {
+        if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPassword())) {
             throw new LoginException("Invalid username or password");
         }
+        User user = userOpt.get();
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new LoginException("Invalid username or password");
         }
-
-        SecretKey secretKey = jwtService.generateSecretKey();
-        String audience = UUID.randomUUID().toString();
-        return jwtService.generateToken(login, audience, secretKey);
+        return jwtService.generateToken(user.getUsername());
     }
 
     /*
@@ -58,14 +66,9 @@ public class AuthService implements IAuthService {
             user.setAddress(registerRequest.getAddress());
             user.setUsername(registerRequest.getLogin());
             user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-
-            String audience = UUID.randomUUID().toString();
-
-            SecretKey secretKey = jwtService.generateSecretKey();
-
-            String token = jwtService.generateToken(user.getUsername(), audience, secretKey);
             userRepository.save(user);
-            return token;
+
+            return jwtService.generateToken(user.getUsername());
         } else {
             throw new RegisterException("Username already exists");
         }

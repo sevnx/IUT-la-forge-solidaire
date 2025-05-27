@@ -10,9 +10,9 @@ public class ToolsController {
 
     private Tool tool;
 
-    @GetMapping(value = "", produces = "application/json")
+    @GetMapping(value = "")
     public String getTools() {
-        return null;
+        return "test";
     }
 
     @PostMapping(value = "/{id}/borrow-requests", produces = "application/json")

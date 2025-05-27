@@ -20,6 +20,7 @@ public class CookieService implements ICookieService {
 
     @Override
     public ResponseCookie removeCookie(String name) {
+
         return ResponseCookie.from(name, null)
                 .httpOnly(true)
                 .secure(true)
