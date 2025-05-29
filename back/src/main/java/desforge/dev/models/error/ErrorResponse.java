@@ -1,0 +1,26 @@
+package desforge.dev.models.error;
+
+public class ErrorResponse {
+    private int statusCode;
+    private String message;
+
+
+    public ErrorResponse() {
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+}

@@ -4,6 +4,7 @@ import desforge.dev.errors.LoginException;
 import desforge.dev.errors.RegisterException;
 import desforge.dev.models.auth.LoginRequest;
 import desforge.dev.models.auth.RegisterRequest;
+import desforge.dev.models.error.ErrorResponse;
 import desforge.dev.repositories.UserRepository;
 import desforge.dev.services.IAuthService;
 import desforge.dev.services.ICookieService;
@@ -12,7 +13,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -36,15 +41,21 @@ public class AuthController {
     * @param registerRequest
     */
     @PostMapping(value = "/register", produces = "application/json")
-    public void registerUser(@Valid @RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
+    public ResponseEntity<ErrorResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
         try {
             String token = authService.register(registerRequest);
 
             ResponseCookie cookie = cookieService.addCookie(cookieName, token, cookieExpirationMs);
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (RegisterException e) {
-            throw new RegisterException("Register failed: " + e.getMessage());
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.setMessage(e.getMessage());
+            errorResponse.setStatusCode(HttpStatus.CONFLICT.value());
+            return ResponseEntity.
+                    status(HttpStatus.CONFLICT)
+                    .body(errorResponse);
         }
     }
 
@@ -53,15 +64,21 @@ public class AuthController {
      * @param loginRequest
      */
     @PostMapping(value = "/login", produces = "application/json")
-    public void loginUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<ErrorResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         try {
             String token = authService.login(loginRequest);
 
             ResponseCookie cookie = cookieService.addCookie(cookieName, token, cookieExpirationMs);
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (LoginException e) {
-            throw new LoginException("login failed: " + e.getMessage());
+            ErrorResponse errorResponse = new ErrorResponse();
+            errorResponse.setMessage(e.getMessage());
+            errorResponse.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+            return ResponseEntity.
+                    status(HttpStatus.UNAUTHORIZED)
+                    .body(errorResponse);
         }
     }
 
@@ -70,7 +87,8 @@ public class AuthController {
     * @param response
     */
     @PostMapping(value = "/logout")
-    public void logoutUser(HttpServletResponse response) {
+    @PreAuthorize("isAuthenticated()")
+    public void logoutUser(HttpServletResponse response, Authentication authentication) {
         ResponseCookie cookie = cookieService.removeCookie(cookieName);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }

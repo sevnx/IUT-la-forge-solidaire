@@ -27,15 +27,6 @@ public class AuthService implements IAuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private ICookieService cookieService;
-
-    @Value("${cookie.name}")
-    private String cookieName;
-
-    @Value("${cookie.expiration}")
-    private int cookieExpirationMs;
-
     /*
     * @param request the login model
     * @return the token
