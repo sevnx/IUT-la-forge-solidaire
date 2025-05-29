@@ -5,6 +5,7 @@ import desforge.dev.entities.Tool;
 import desforge.dev.entities.User;
 import desforge.dev.enumerations.BorrowRequestState;
 import desforge.dev.errors.BorrowRequestAlreadyExistsException;
+import desforge.dev.errors.CannotBorrowOwnToolException;
 import desforge.dev.errors.ToolNotExistsException;
 import desforge.dev.models.tools.CreateBorrowRequest;
 import desforge.dev.models.tools.CreateToolRequest;
@@ -63,12 +64,12 @@ public class ToolService implements IToolService {
             throw new IllegalArgumentException();
         }
 
-        if (!(userRepository.findByIdUser(user.getIdUser()).getBorrowRequests().size() == 0)) {
+        if (!(userRepository.findByIdUser(user.getIdUser()).getBorrowRequests().isEmpty())) {
             throw new BorrowRequestAlreadyExistsException("User already has a pending borrow request");
         }
 
         if (user.equals(tool.getOwner())) {
-            throw new BorrowRequestAlreadyExistsException();
+            throw new CannotBorrowOwnToolException("User not allowed to borrow own tool");
         }
 
         BorrowRequest borrowRequest = new BorrowRequest();
