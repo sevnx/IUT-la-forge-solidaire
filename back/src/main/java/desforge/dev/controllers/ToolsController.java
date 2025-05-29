@@ -35,9 +35,9 @@ public class ToolsController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> createBorrowRequest(@PathVariable("toolId") int toolId, @RequestBody CreateBorrowRequest createBorrowRequest,
                                                     Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
         try {
-            System.out.println("test" + createBorrowRequest.getReturnDate());
-            toolsService.createBorrowRequest(toolId, createBorrowRequest, authentication);
+            toolsService.createBorrowRequest(toolId, createBorrowRequest, user);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (ToolNotExistsException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
