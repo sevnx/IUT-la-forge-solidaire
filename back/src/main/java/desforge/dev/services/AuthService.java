@@ -8,7 +8,6 @@ import desforge.dev.models.auth.LoginRequest;
 import desforge.dev.models.auth.RegisterRequest;
 import desforge.dev.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +26,10 @@ public class AuthService implements IAuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private ICookieService cookieService;
+    private final static int MIN_CHAR_LOGIN = 2;
 
-    @Value("${cookie.name}")
-    private String cookieName;
+    private final static int MAX_CHAR_LOGIN = 32;
 
-    @Value("${cookie.expiration}")
-    private int cookieExpirationMs;
 
     /*
     * @param request the login model

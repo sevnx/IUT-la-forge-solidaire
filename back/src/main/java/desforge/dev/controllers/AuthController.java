@@ -12,7 +12,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -36,13 +38,15 @@ public class AuthController {
     * @param registerRequest
     */
     @PostMapping(value = "/register", produces = "application/json")
-    public void registerUser(@Valid @RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
+    public ResponseEntity<Void> registerUser(@Valid @RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
         try {
             String token = authService.register(registerRequest);
 
             ResponseCookie cookie = cookieService.addCookie(cookieName, token, cookieExpirationMs);
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (RegisterException e) {
             throw new RegisterException("Register failed: " + e.getMessage());
         }
