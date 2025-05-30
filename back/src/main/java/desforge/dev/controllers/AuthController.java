@@ -1,13 +1,17 @@
 package desforge.dev.controllers;
 
-import desforge.dev.errors.LoginException;
-import desforge.dev.errors.RegisterException;
+import desforge.dev.errors.auth.LoginException;
+import desforge.dev.errors.auth.RegisterException;
 import desforge.dev.models.auth.LoginRequest;
 import desforge.dev.models.auth.RegisterRequest;
 import desforge.dev.models.error.ErrorResponse;
-import desforge.dev.repositories.UserRepository;
 import desforge.dev.services.IAuthService;
 import desforge.dev.services.ICookieService;
+import desforge.dev.services.IErrorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -30,18 +33,31 @@ public class AuthController {
     @Autowired
     private ICookieService cookieService;
 
+    @Autowired
+    private IErrorService errorService;
+
     @Value("${cookie.name}")
     private String cookieName;
 
     @Value("${cookie.expiration}")
     private int cookieExpirationMs;
 
-    /*
-    * The endpoint used to register a user.
-    * @param registerRequest
-    */
     @PostMapping(value = "/register", produces = "application/json")
-    public ResponseEntity<ErrorResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
+    @Operation(
+            summary = "User registration",
+            description = "Creates a new user and returns a JWT token in a cookie.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "User registration data",
+                    content = @Content(schema = @Schema(implementation = RegisterRequest.class))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Registration successful (the token is sent in a cookie)"),
+                    @ApiResponse(responseCode = "409", description = "User already exists",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
         try {
             String token = authService.register(registerRequest);
 
@@ -50,21 +66,26 @@ public class AuthController {
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (RegisterException e) {
-            ErrorResponse errorResponse = new ErrorResponse();
-            errorResponse.setMessage(e.getMessage());
-            errorResponse.setStatusCode(HttpStatus.CONFLICT.value());
-            return ResponseEntity.
-                    status(HttpStatus.CONFLICT)
-                    .body(errorResponse);
+            return errorService.buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
-    /*
-     * The endpoint used to log a user.
-     * @param loginRequest
-     */
+
     @PostMapping(value = "/login", produces = "application/json")
-    public ResponseEntity<ErrorResponse> loginUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    @Operation(
+            summary = "User login",
+            description = "Logs in a user and returns a JWT token in a cookie.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "User login data",
+                    content = @Content(schema = @Schema(implementation = LoginRequest.class))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Login successful (the token is sent in a cookie)"),
+                    @ApiResponse(responseCode = "401", description = "Invalid username or password",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            }
+    )
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         try {
             String token = authService.login(loginRequest);
 
@@ -73,23 +94,23 @@ public class AuthController {
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (LoginException e) {
-            ErrorResponse errorResponse = new ErrorResponse();
-            errorResponse.setMessage(e.getMessage());
-            errorResponse.setStatusCode(HttpStatus.UNAUTHORIZED.value());
-            return ResponseEntity.
-                    status(HttpStatus.UNAUTHORIZED)
-                    .body(errorResponse);
+            return errorService.buildErrorResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
-    /*
-    * Log out a user
-    * @param response
-    */
+
     @PostMapping(value = "/logout")
+    @Operation(
+            summary = "User logout",
+            description = "Logs out a user by removing the JWT token cookie.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Logout successful"),
+            }
+    )
     @PreAuthorize("isAuthenticated()")
-    public void logoutUser(HttpServletResponse response, Authentication authentication) {
+    public ResponseEntity<?>  logoutUser(HttpServletResponse response) {
         ResponseCookie cookie = cookieService.removeCookie(cookieName);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

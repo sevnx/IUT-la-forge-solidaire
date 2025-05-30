@@ -1,7 +1,7 @@
 package desforge.dev.models.error;
 
 public class ErrorResponse {
-    private int statusCode;
+    private int errorCode;
     private String message;
 
 
@@ -17,10 +17,10 @@ public class ErrorResponse {
     }
 
     public int getStatusCode() {
-        return statusCode;
+        return errorCode;
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+    public void setErrorCode(int statusCode) {
+        this.errorCode = statusCode;
     }
 }

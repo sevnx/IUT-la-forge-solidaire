@@ -1,4 +1,4 @@
-package desforge.dev.errors;
+package desforge.dev.errors.auth;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

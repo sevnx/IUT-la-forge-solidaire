@@ -1,52 +1,79 @@
 package desforge.dev.controllers;
 
-import desforge.dev.entities.BorrowRequest;
+
 import desforge.dev.entities.User;
 import desforge.dev.enumerations.BorrowRequestState;
-import desforge.dev.models.user.BorrowRequestUserResponse;
-import desforge.dev.models.user.BorrowUserResponse;
-import desforge.dev.models.user.ToolUserResponse;
+import desforge.dev.models.user.wrapper.BorrowRequestUserResponseWrapper;
+import desforge.dev.models.user.wrapper.BorrowUserResponseWrapper;
+import desforge.dev.models.user.wrapper.ToolUserResponseWrapper;
 import desforge.dev.services.IBorrowRequestService;
 import desforge.dev.services.IBorrowService;
 import desforge.dev.services.IToolService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/users")
 public class UsersControllers {
 
     @Autowired
     private IBorrowService borrowService;
+    @Autowired
     private IBorrowRequestService borrowRequestService;
-
+    @Autowired
     private IToolService toolService;
 
     @GetMapping(value = "/tools", produces = "application/json")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Map<String,List<ToolUserResponse>>> getUserTools(Authentication authentication) {
+    @Operation(
+            summary = "Get user tools",
+            description = "Returns a list of tools owned by the authenticated user.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Tools retrieved successfully")
+            }
+    )
+    public ResponseEntity<ToolUserResponseWrapper> getUserTools(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(Map.of("data", toolService.getUserTools(user)));
+        ToolUserResponseWrapper toolUserResponseWrapper = new ToolUserResponseWrapper();
+        toolUserResponseWrapper.setData(toolService.getUserTools(user));
+        return ResponseEntity.ok(toolUserResponseWrapper);
     }
 
     @GetMapping(value = "/borrows", produces = "application/json")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Map<String,List<BorrowUserResponse>>> getUserBorrows(Authentication authentication) {
+    @Operation(
+            summary = "Get user borrows",
+            description = "Returns a list of borrow records for the authenticated user.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Borrows retrieved successfully")
+            }
+    )
+    public ResponseEntity<BorrowUserResponseWrapper> getUserBorrows(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(Map.of("data", borrowService.getUserBorrow(user)));
+        BorrowUserResponseWrapper responseWrapper = new BorrowUserResponseWrapper();
+        responseWrapper.setData(borrowService.getUserBorrow(user));
+        return ResponseEntity.ok(responseWrapper);
     }
 
     @GetMapping(value = "/borrow-requests", produces = "application/json")
-    public ResponseEntity<Map<String,List<BorrowRequestUserResponse>>> getUserPendingBorrowRequests
+    @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Get user pending borrow requests",
+            description = "Returns a list of pending borrow requests for the authenticated user.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Pending borrow requests retrieved successfully")
+            }
+    )
+    public ResponseEntity<BorrowRequestUserResponseWrapper> getUserPendingBorrowRequests
             (Authentication authentication,
             @RequestParam(required = false, defaultValue = "PENDING") BorrowRequestState state) {
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(Map.of("data", borrowRequestService.getBorrowRequestsByUser(user, state)));
+        BorrowRequestUserResponseWrapper responseWrapper = new BorrowRequestUserResponseWrapper();
+        responseWrapper.setData(borrowRequestService.getBorrowRequestsByUser(user, state));
+        return ResponseEntity.ok(responseWrapper);
     }
 }

@@ -13,6 +13,8 @@ public interface BorrowRequestRepository extends JpaRepository<BorrowRequest, In
     Optional<BorrowRequest> findByidRequest(int idRequest);
     List<BorrowRequest> findBytoolBorrowRequest(Tool toolBorrowRequest);
 
+    List<BorrowRequest> findBytoolBorrowRequestAndState(Tool toolBorrowRequest, BorrowRequestState state);
+
     List<BorrowRequest> findByUserBorrowRequestAndState(User userBorrowRequest, BorrowRequestState state);
 
 }

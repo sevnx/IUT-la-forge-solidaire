@@ -1,10 +1,20 @@
-package desforge.dev.models.user;
+package desforge.dev.models.tools;
 
-public class BorrowRequestUserResponse {
+import jakarta.validation.constraints.NotBlank;
 
+public class CreateToolRequest {
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String description;
-    private  String image;
+
+    @NotBlank
+    private String imagePath;
+
+    public CreateToolRequest() {
+    }
 
     public String getName() {
         return name;
@@ -22,13 +32,11 @@ public class BorrowRequestUserResponse {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
-
-
 }

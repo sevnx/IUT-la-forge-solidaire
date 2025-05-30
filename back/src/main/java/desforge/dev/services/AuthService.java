@@ -2,13 +2,12 @@ package desforge.dev.services;
 
 
 import desforge.dev.entities.User;
-import desforge.dev.errors.LoginException;
-import desforge.dev.errors.RegisterException;
+import desforge.dev.errors.auth.LoginException;
+import desforge.dev.errors.auth.RegisterException;
 import desforge.dev.models.auth.LoginRequest;
 import desforge.dev.models.auth.RegisterRequest;
 import desforge.dev.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +26,7 @@ public class AuthService implements IAuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    /*
-    * @param request the login model
-    * @return the token
-    */
+
     public String login(LoginRequest request) {
         String login = request.getLogin();
         Optional<User> userOpt = userRepository.findByUsername(login);
@@ -46,11 +42,6 @@ public class AuthService implements IAuthService {
         return jwtService.generateToken(user.getUsername());
     }
 
-    /*
-     *
-     * @param request the register model
-     * @return the token
-     */
     public String register(RegisterRequest registerRequest) throws RegisterException {
         if (!userRepository.existsByUsername(registerRequest.getLogin())){
             User user = new User();

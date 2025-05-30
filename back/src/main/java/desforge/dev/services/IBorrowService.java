@@ -6,5 +6,5 @@ import desforge.dev.models.user.BorrowUserResponse;
 import java.util.List;
 
 public interface IBorrowService {
-    public List<BorrowUserResponse> getUserBorrow(User userBorrow);
+    List<BorrowUserResponse> getUserBorrow(User userBorrow);
 }

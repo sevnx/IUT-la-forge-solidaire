@@ -3,7 +3,6 @@ package desforge.dev.services;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
 
 import javax.crypto.SecretKey;
 

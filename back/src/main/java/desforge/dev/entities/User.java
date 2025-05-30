@@ -2,6 +2,7 @@ package desforge.dev.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +29,11 @@ public class User {
     @OneToMany(mappedBy = "idBorrow")
     private List<Borrow> borrows;
 
-    public User(){}
+    public User(){
+        ownedTools = new ArrayList<>();
+        borrowRequests = new ArrayList<>();
+        borrows = new ArrayList<>();
+    }
 
     public UUID getIdUser() {
         return idUser;

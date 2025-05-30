@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType("application/json");
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setMessage("Authentication failed: " + authException.getMessage());
-        errorResponse.setStatusCode(HttpServletResponse.SC_UNAUTHORIZED);
+        errorResponse.setErrorCode(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
 }

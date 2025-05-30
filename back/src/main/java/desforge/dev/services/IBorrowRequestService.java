@@ -8,6 +8,6 @@ import desforge.dev.models.user.BorrowRequestUserResponse;
 import java.util.List;
 
 public interface IBorrowRequestService {
-    public void setBorrowRequestStatus(int idRequest, BorrowRequestState status);
-    public List<BorrowRequestUserResponse> getBorrowRequestsByUser(User user, BorrowRequestState state);
+     void setBorrowRequestStatus(int idRequest, BorrowRequestState status,User user);
+     List<BorrowRequestUserResponse> getBorrowRequestsByUser(User user, BorrowRequestState state);
 }

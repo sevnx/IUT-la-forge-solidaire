@@ -6,6 +6,7 @@ public class BorrowUserResponse {
     private String toolName;
     private String description;
     private String image;
+    private Date dateReturn;
 
     public String getToolName() {
         return toolName;
@@ -39,5 +40,5 @@ public class BorrowUserResponse {
         this.dateReturn = dateReturn;
     }
 
-    private Date dateReturn;
+
 }

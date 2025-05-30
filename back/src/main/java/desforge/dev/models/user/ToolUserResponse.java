@@ -5,7 +5,6 @@ import java.util.Optional;
 
 public class ToolUserResponse {
     private int toolNumber;
-
     private String toolName;
     private String description;
     private String image;
