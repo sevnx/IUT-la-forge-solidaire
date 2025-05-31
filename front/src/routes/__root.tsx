@@ -1,4 +1,5 @@
 import { Footer } from '@/components/core/Footer';
+import { Toaster } from '@/components/ui/sonner';
 import { ApiContext } from '@/context/ApiContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { createRootRoute, Outlet } from '@tanstack/react-router';
@@ -14,6 +15,7 @@ export const Route = createRootRoute({
           <Footer />
         </div>
       </ApiContext>
+      <Toaster />
     </AuthProvider>
   ),
 });

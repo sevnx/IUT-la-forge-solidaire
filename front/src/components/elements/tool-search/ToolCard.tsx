@@ -9,18 +9,37 @@ import { Calendar } from '@/components/ui/calendar';
 import { FormattedDate } from '@/components/core/FormattedDate';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
+import { createToolBorrow } from '@/api/tools/borrows';
+import { toast } from 'sonner';
 
 export interface ToolCardProps {
   tool: Tool;
   className?: string;
 }
+
 export function ToolCard({ tool, className }: ToolCardProps) {
   const available = tool.availableAt ? false : true;
   const [returnDate, setReturnDate] = useState<Date | undefined>(undefined);
+  const [open, setOpen] = useState(false);
 
-  const handleBorrowRequest = () => {
-    console.log(returnDate);
-    console.log('Borrow request');
+  const handleBorrowRequest = async () => {
+    if (!returnDate) {
+      return;
+    }
+
+    const result = await createToolBorrow(tool.id, {
+      returnDate: returnDate.toISOString(),
+    });
+
+    if (result.isErr()) {
+      toast.error("Erreur lors de la demande d'emprunt", { style: { fontSize: '1rem', padding: '1.25rem 2.5rem' } });
+    } else {
+      toast.success(
+        `Demande d'emprunt envoyée pour le ${returnDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`,
+        { className: 'flex justify-center items-center py-50', style: { fontSize: '1rem', padding: '1.25rem 2.5rem' } },
+      );
+    }
+    setOpen(false);
   };
 
   return (
@@ -56,7 +75,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
         )}
       </CardContent>
       <CardFooter className="flex-shrink-0 mt-auto">
-        <Popover>
+        <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button className="w-full" disabled={!available}>
               Emprunter
@@ -66,12 +85,16 @@ export function ToolCard({ tool, className }: ToolCardProps) {
             <Label className="text-sm mt-2 justify-center font-medium text-muted-foreground mb-2">
               Indiquez la date de retour
             </Label>
-            <Calendar
-              mode="single"
-              selected={returnDate}
-              onSelect={setReturnDate}
-              disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-            />
+            <div className="w-[300px]">
+              <Calendar
+                mode="single"
+                selected={returnDate}
+                onSelect={setReturnDate}
+                disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                className="w-full flex justify-center items-center"
+                lang="fr"
+              />
+            </div>
             <Button onClick={handleBorrowRequest} className="w-full rounded-t-none">
               Confirmer la demande
             </Button>
