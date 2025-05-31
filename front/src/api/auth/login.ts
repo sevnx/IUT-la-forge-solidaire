@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ResultAsync } from 'neverthrow';
 
 export interface LoginRequest {
-  username: string;
+  login: string;
   password: string;
 }
 

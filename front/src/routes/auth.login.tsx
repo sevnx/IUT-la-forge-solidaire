@@ -13,7 +13,7 @@ export const Route = createFileRoute('/auth/login')({
 });
 
 const Login = type({
-  username: type.string.atLeastLength(1).configure({
+  login: type.string.atLeastLength(1).configure({
     message: "L'identifiant est requis",
   }),
   password: type.string.atLeastLength(1).configure({
@@ -28,13 +28,16 @@ function RouteComponent() {
   const form = useForm<typeof Login.infer>({
     resolver: arktypeResolver(Login),
     defaultValues: {
-      username: '',
+      login: '',
       password: '',
     },
   });
 
   const onSubmit = async (data: typeof Login.infer) => {
-    await login(data);
+    const result = await login(data);
+    if (result.isErr()) {
+      setMessage('Identifiant ou mot de passe incorrect');
+    }
   };
 
   const clearMessage = () => {
@@ -48,7 +51,7 @@ function RouteComponent() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name="username"
+          name="login"
           render={({ field }) => (
             <FormItem className="mt-6">
               <FormLabel>Identifiant</FormLabel>

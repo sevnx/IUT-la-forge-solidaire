@@ -2,14 +2,14 @@ import { login as loginApi, type LoginError, type LoginRequest } from '@/api/aut
 import { register as registerApi, type RegisterError, type RegisterRequest } from '@/api/auth/register';
 import { logout as logoutApi, LogoutError } from '@/api/auth/logout';
 import { getUser } from '@/api/user/user';
-import { ResultAsync } from 'neverthrow';
+import { Result } from 'neverthrow';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 interface AuthContextProps {
   state: AuthState;
-  login: (credentials: LoginRequest) => ResultAsync<void, LoginError>;
-  register: (request: RegisterRequest) => ResultAsync<void, RegisterError>;
-  logout: () => ResultAsync<void, LogoutError>;
+  login: (credentials: LoginRequest) => Promise<Result<void, LoginError>>;
+  register: (request: RegisterRequest) => Promise<Result<void, RegisterError>>;
+  logout: () => Promise<Result<void, LogoutError>>;
 }
 
 export enum AuthState {
@@ -36,25 +36,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     fetchUser();
   }, []);
 
-  const register = (request: RegisterRequest): ResultAsync<void, RegisterError> => {
-    return registerApi(request).andThen(() => {
+  const register = async (request: RegisterRequest): Promise<Result<void, RegisterError>> => {
+    const result = await registerApi(request);
+    if (result.isOk()) {
       setState(AuthState.LoggedIn);
-      return ResultAsync.fromSafePromise(Promise.resolve());
-    });
+    }
+    return result;
   };
 
-  const login = (credentials: LoginRequest): ResultAsync<void, LoginError> => {
-    return loginApi(credentials).andThen(() => {
+  const login = async (credentials: LoginRequest): Promise<Result<void, LoginError>> => {
+    const result = await loginApi(credentials);
+    if (result.isOk()) {
       setState(AuthState.LoggedIn);
-      return ResultAsync.fromSafePromise(Promise.resolve());
-    });
+    }
+    return result;
   };
 
-  const logout = (): ResultAsync<void, LogoutError> => {
-    return logoutApi().andThen(() => {
+  const logout = async (): Promise<Result<void, LogoutError>> => {
+    const result = await logoutApi();
+    if (result.isOk()) {
       setState(AuthState.LoggedOut);
-      return ResultAsync.fromSafePromise(Promise.resolve());
-    });
+    }
+    return result;
   };
 
   return <AuthContext.Provider value={{ state, login, register, logout }}>{children}</AuthContext.Provider>;

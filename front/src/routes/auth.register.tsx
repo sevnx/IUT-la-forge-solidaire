@@ -1,7 +1,8 @@
-import { register, RegisterError } from '@/api/auth/register';
+import { RegisterError } from '@/api/auth/register';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useAuth } from '@/context/AuthContext';
 import { arktypeResolver } from '@hookform/resolvers/arktype';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { type } from 'arktype';
@@ -43,7 +44,7 @@ const password = type.string
   });
 
 const Register = type({
-  username: type.string.atLeastLength(2).atMostLength(32).configure({
+  login: type.string.atLeastLength(2).atMostLength(32).configure({
     message: "L'identifiant doit contenir entre 2 et 32 caractères",
   }),
   address: type.string.atLeastLength(2).atMostLength(255).configure({
@@ -64,10 +65,11 @@ const Register = type({
 
 function RouteComponent() {
   const [error, setError] = useState<string | null>(null);
+  const { register } = useAuth();
   const form = useForm<typeof Register.infer>({
     resolver: arktypeResolver(Register),
     defaultValues: {
-      username: '',
+      login: '',
       address: '',
       password: '',
       confirmPassword: '',
@@ -76,11 +78,15 @@ function RouteComponent() {
   });
 
   const onSubmit = async (data: typeof Register.infer) => {
-    const result = await register(data);
+    const result = await register({
+      login: data.login,
+      password: data.password,
+      address: data.address,
+    });
     if (result.isErr()) {
       switch (result.error) {
         case RegisterError.UsernameAlreadyExists:
-          form.setError('username', {
+          form.setError('login', {
             message: 'Cet identifiant est déjà utilisé',
           });
           break;
@@ -101,7 +107,7 @@ function RouteComponent() {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name="username"
+          name="login"
           render={({ field }) => (
             <FormItem className="mt-6">
               <FormLabel>Identifiant</FormLabel>
