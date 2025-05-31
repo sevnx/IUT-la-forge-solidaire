@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ResultAsync } from 'neverthrow';
 
 export interface Tool {
-  id: string;
+  id: number;
   name: string;
   description: string;
   imageSrc: string;

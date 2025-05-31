@@ -13,7 +13,7 @@ export enum CreateToolBorrowError {
 }
 
 export const createToolBorrow = (
-  toolId: string,
+  toolId: number,
   borrowDescription: BorrowDescription,
 ): ResultAsync<void, CreateToolBorrowError> => {
   return ResultAsync.fromPromise(api.post(`/tools/${toolId}/borrow-request`, borrowDescription), (error) => {
@@ -30,7 +30,7 @@ export const createToolBorrow = (
 };
 
 export interface ToolBorrowRequest {
-  requestId: string;
+  requestId: number;
   username: string;
   dateRequest: string;
   dateReturn: string;
@@ -62,7 +62,7 @@ export enum UpdateToolBorrowRequestError {
 }
 
 export const updateToolBorrowRequest = (
-  requestId: string,
+  requestId: number,
   decision: ToolBorrowRequestDecision,
 ): ResultAsync<void, UpdateToolBorrowRequestError> => {
   return ResultAsync.fromPromise(api.put(`/borrow-requests/${requestId}`, { decision }), (error) => {
