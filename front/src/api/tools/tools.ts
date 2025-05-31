@@ -1,6 +1,5 @@
 import api from '@/lib/api';
-import axios from 'axios';
-import { ResultAsync } from 'neverthrow';
+import { okAsync, ResultAsync } from 'neverthrow';
 
 export interface Tool {
   id: number;
@@ -16,12 +15,11 @@ export enum GetToolError {
   UnexpectedError = 'Unexpected error',
 }
 
-export const getTools = (): ResultAsync<Tool[], Error> => {
-  return ResultAsync.fromPromise(api.get('/tools'), (error) => {
-    if (axios.isAxiosError(error)) {
-      return new Error(GetToolError.UnexpectedError);
-    }
-    return new Error(GetToolError.UnexpectedError);
+export const getTools = (): ResultAsync<Tool[], GetToolError> => {
+  return ResultAsync.fromPromise(api.get('/tools'), () => {
+    return GetToolError.UnexpectedError;
+  }).andThen((tools) => {
+    return okAsync(tools.data.data);
   });
 };
 
@@ -44,5 +42,7 @@ export const createTool = (toolDescription: ToolDescription): ResultAsync<void, 
 export const getUserTools = (): ResultAsync<Tool[], CreateToolError> => {
   return ResultAsync.fromPromise(api.get('/user/tools'), () => {
     return CreateToolError.UnexpectedError;
+  }).andThen((tools) => {
+    return okAsync(tools.data.data);
   });
 };

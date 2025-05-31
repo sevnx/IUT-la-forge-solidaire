@@ -1,4 +1,7 @@
+import { getUserTools } from '@/api/tools/tools';
 import { UserTools } from '@/components/elements/user-tools/UserTools';
+import { neverthrowToError } from '@/lib/neverthrow';
+import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/user/tools')({
@@ -6,18 +9,20 @@ export const Route = createFileRoute('/user/tools')({
 });
 
 function RouteComponent() {
+  const { data: tools } = useQuery({
+    queryKey: ['tools'],
+    queryFn: neverthrowToError(getUserTools),
+  })
+
+  if (tools === undefined) {
+    return <div>Loading...</div>;
+  }
+
+  console.log(tools);
+
   return (
     <UserTools
-      tools={[
-        {
-          id: '1',
-          name: 'Scie circulaire',
-          description: 'Scie circulaire portative 1200W avec guide laser',
-          imageSrc: 'https://placehold.co/600x400',
-          ownerAddress: '45 Avenue des Champs, Lyon',
-          availableAt: '2025-01-01T00:00:00.000Z',
-        },
-      ]}
+      tools={tools ?? []}
     />
   );
 }
