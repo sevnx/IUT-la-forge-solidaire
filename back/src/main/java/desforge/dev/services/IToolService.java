@@ -10,12 +10,13 @@ import desforge.dev.models.tools.ToolResponse;
 import desforge.dev.models.user.ToolUserResponse;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface IToolService {
 
-    void createTool(@Valid CreateToolRequest request, User user);
+    void createTool(User user, String name, String description, MultipartFile image);
     void createBorrowRequest(int idTool, CreateBorrowRequest createborrowRequest, User user)
             throws ToolNotExistsException, BorrowRequestAlreadyExistsException;
     List<ToolUserResponse> getUserTools(User user);

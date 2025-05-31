@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -63,7 +64,8 @@ public class ToolsController {
             }
     )
     public ResponseEntity<?> createBorrowRequest(@PathVariable("toolId") int toolId, @RequestBody CreateBorrowRequest createBorrowRequest,
-                                                             Authentication authentication) {
+
+                                                 Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         try {
             toolsService.createBorrowRequest(toolId, createBorrowRequest, user);
@@ -95,10 +97,13 @@ public class ToolsController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    public ResponseEntity<?> createTool(@RequestBody CreateToolRequest request, Authentication auth) {
+    public ResponseEntity<?> createTool( Authentication auth,
+                                        @RequestParam String name,
+                                        @RequestParam String description,
+                                        @RequestParam MultipartFile image) {
         try {
             User user = (User) auth.getPrincipal();
-            toolsService.createTool(request, user);
+            toolsService.createTool( user, name, description, image);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (IllegalArgumentException e) {
             return errorService.buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());

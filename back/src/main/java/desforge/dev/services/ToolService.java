@@ -21,6 +21,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.File;
@@ -39,22 +40,27 @@ public class ToolService implements IToolService {
     @Autowired
     private BorrowRepository borrowRepository;
 
+    @Autowired
+    private IFileService fileService;
+
     @Override
-    public void createTool(@Valid CreateToolRequest request, User user) throws ToolNotExistsException {
-        String imgPath = request.getImagePath();
-        int dotIndex = imgPath.lastIndexOf(".");
-        String extension = imgPath.substring(dotIndex + 1);
-        if (!extension.equals("png") && !extension.equals("jpg") && !extension.equals("jpeg")) {
-            throw new IllegalArgumentException();
-        }
-        File file = new File(imgPath);
-        if(!file.exists() || file.isDirectory()) {
-            throw new IllegalArgumentException();
-        }
+    public void createTool(User user, String name, String description, MultipartFile image) throws ToolNotExistsException {
+        fileService.storeFile(image);
+
+//        String imgPath = request.getImagePath();
+//        int dotIndex = imgPath.lastIndexOf(".");
+//        String extension = imgPath.substring(dotIndex + 1);
+//        if (!extension.equals("png") && !extension.equals("jpg") && !extension.equals("jpeg")) {
+//            throw new IllegalArgumentException();
+//        }
+//        File file = new File(imgPath);
+//        if(!file.exists() || file.isDirectory()) {
+//            throw new IllegalArgumentException();
+//        }
         Tool tool = new Tool();
-        tool.setPhoto(request.getImagePath());
-        tool.setDescription(request.getDescription());
-        tool.setName(request.getName());
+        tool.setPhoto("hello");
+        tool.setDescription(description);
+        tool.setName(name);
         tool.setOwner(user);
         toolRepository.save(tool);
     }
