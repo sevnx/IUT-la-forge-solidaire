@@ -7,7 +7,7 @@ public class ToolUserResponse {
     private int toolNumber;
     private String toolName;
     private String description;
-    private String image;
+    private String imageSrc;
 
     private Date availableAt;
 
@@ -35,12 +35,12 @@ public class ToolUserResponse {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageSrc() {
+        return imageSrc;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageSrc(String imageSrc) {
+        this.imageSrc = imageSrc;
     }
 
     public Date getAvailableAt() {

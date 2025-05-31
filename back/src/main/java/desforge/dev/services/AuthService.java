@@ -7,6 +7,7 @@ import desforge.dev.errors.auth.RegisterException;
 import desforge.dev.models.auth.LoginRequest;
 import desforge.dev.models.auth.RegisterRequest;
 import desforge.dev.repositories.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,13 @@ public class AuthService implements IAuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final int  MIN_PASSWORD_LENGTH = 12;
+
+    private final int  MIN_LOGIN_LENGTH = 2;
+
+    private final int  MAX_LOGIN_LENGTH = 32;
+
+    private final String REQUIRED_PASSWORD_CHARS = "!@#$%^&*()_+-={}[]:;\"'<>,.?/\\|~`";
 
     public String login(LoginRequest request) {
         String login = request.getLogin();
@@ -42,8 +50,15 @@ public class AuthService implements IAuthService {
         return jwtService.generateToken(user.getUsername());
     }
 
-    public String register(RegisterRequest registerRequest) throws RegisterException {
-        if (!userRepository.existsByUsername(registerRequest.getLogin())){
+    public String register(@Valid RegisterRequest registerRequest) throws RegisterException, IllegalArgumentException {
+        String login = registerRequest.getLogin();
+        String password = registerRequest.getPassword();
+        if (!userRepository.existsByUsername(registerRequest.getLogin())) {
+            if (login.length() < MIN_LOGIN_LENGTH || login.length() > MAX_LOGIN_LENGTH) {
+                throw new IllegalArgumentException("The login length must be between " + MIN_LOGIN_LENGTH + " and " + MAX_LOGIN_LENGTH);
+            }
+            validatePassword(password);
+
             User user = new User();
             user.setAddress(registerRequest.getAddress());
             user.setUsername(registerRequest.getLogin());
@@ -55,4 +70,25 @@ public class AuthService implements IAuthService {
             throw new RegisterException("Username already exists");
         }
     }
+
+    private void validatePassword(String password) throws IllegalArgumentException {
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new IllegalArgumentException("The password length must be at least " + MIN_PASSWORD_LENGTH);
+        }
+
+        boolean hasSpecial = false;
+        boolean hasUppercase = false;
+        boolean hasDigit = false;
+
+        for (char c : password.toCharArray()) {
+            if (REQUIRED_PASSWORD_CHARS.indexOf(c) >= 0) hasSpecial = true;
+            if (Character.isUpperCase(c)) hasUppercase = true;
+            if (Character.isDigit(c)) hasDigit = true;
+        }
+
+        if (!hasSpecial) throw new IllegalArgumentException("The password must contain a special character");
+        if (!hasUppercase) throw new IllegalArgumentException("The password must contain an uppercase letter");
+        if (!hasDigit) throw new IllegalArgumentException("The password must contain a digit");
+    }
+
 }

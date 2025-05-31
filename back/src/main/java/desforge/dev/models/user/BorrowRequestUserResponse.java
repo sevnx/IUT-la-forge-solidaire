@@ -4,7 +4,7 @@ public class BorrowRequestUserResponse {
 
     private String name;
     private String description;
-    private  String image;
+    private String imageSrc;
 
     public String getName() {
         return name;
@@ -22,13 +22,11 @@ public class BorrowRequestUserResponse {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageSrc() {
+        return imageSrc;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageSrc(String imageSrc) {
+        this.imageSrc = imageSrc;
     }
-
-
 }
