@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +52,14 @@ public class AuthController {
                     content = @Content(schema = @Schema(implementation = RegisterRequest.class))
             ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Registration successful (the token is sent in a cookie)"),
-                    @ApiResponse(responseCode = "409", description = "User already exists",
+                    @ApiResponse(responseCode = "200", description = "Registration successful (the token is sent in a cookie)."),
+                    @ApiResponse(responseCode = "400", description = "The Login or the password is invalid.",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "409", description = "User already exists.",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+
             }
     )
-
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
         try {
             String token = authService.register(registerRequest);
@@ -67,6 +70,8 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (RegisterException e) {
             return errorService.buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return errorService.buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -108,9 +113,10 @@ public class AuthController {
             }
     )
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?>  logoutUser(HttpServletResponse response) {
+    public ResponseEntity<?> logoutUser(HttpServletResponse response) {
         ResponseCookie cookie = cookieService.removeCookie(cookieName);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 }
