@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 @Service
-public class FileService implements IFileService {
+public class FileService implements IImageService {
     @Value("${image.upload.path}")
     private String imageDir;
 
@@ -38,9 +38,13 @@ public class FileService implements IFileService {
             }
 
             String fileName = System.currentTimeMillis() + "_" + originalFilename;
+            Path dirPath = Paths.get(imageDir);
 
-            Path filePath = Paths.get(imageDir + fileName);
+            if (!Files.exists(dirPath)) {
+                Files.createDirectories(dirPath);
+            }
 
+            Path filePath = dirPath.resolve(fileName);
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
             return fileName;
@@ -49,5 +53,6 @@ public class FileService implements IFileService {
             throw new RuntimeException("Erreur lors de la sauvegarde du fichier", e);
         }
     }
+
 
 }

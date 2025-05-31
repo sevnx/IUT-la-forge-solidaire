@@ -4,10 +4,10 @@ import desforge.dev.entities.User;
 import desforge.dev.errors.borrow.CannotBorrowOwnToolException;
 import desforge.dev.errors.borrow_request.BorrowRequestAlreadyExistsException;
 import desforge.dev.errors.tools.NotAllowedToGetBorrowRequestTool;
+import desforge.dev.errors.tools.ToolAlreadyBorrowedException;
 import desforge.dev.errors.tools.ToolNotExistsException;
 import desforge.dev.models.error.ErrorResponse;
 import desforge.dev.models.borrow_request.CreateBorrowRequest;
-import desforge.dev.models.tools.CreateToolRequest;
 import desforge.dev.models.tools.wrapper.ToolResponseWrapper;
 import desforge.dev.services.IErrorService;
 import desforge.dev.services.IToolService;
@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -48,7 +49,7 @@ public class ToolsController {
             summary = "Create a borrow request for a tool",
             description = "Creates a borrow request for the specified tool.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Borrow request data (image = absolute path to the image example: C:/Users/user/IUT-prog-avancee/back/src/main/resources/)",
+                    description = "Borrow request data",
                     content = @Content(schema = @Schema(implementation = CreateBorrowRequest.class))
             ),
             responses = {
@@ -57,7 +58,7 @@ public class ToolsController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "400", description = "Invalid request data",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-                    @ApiResponse(responseCode = "409", description = "Borrow request already exists",
+                    @ApiResponse(responseCode = "409", description = "Borrow request already exists or tool is already borrowed",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "403", description = "Cannot borrow own tool",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
@@ -74,22 +75,22 @@ public class ToolsController {
             return errorService.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalArgumentException e) {
             return errorService.buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (BorrowRequestAlreadyExistsException e) {
+        } catch (BorrowRequestAlreadyExistsException | ToolAlreadyBorrowedException e) {
             return errorService.buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
-        }
-        catch (CannotBorrowOwnToolException e) {
+        } catch (CannotBorrowOwnToolException e) {
             return errorService.buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 
-    @PostMapping(value = "", produces = "application/json")
+    @PostMapping(value = "")
     @PreAuthorize("isAuthenticated()")
     @Operation(
             summary = "Create a new tool",
             description = "Creates a new tool and returns a success response.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Tool creation data",
-                    content = @Content(schema = @Schema(implementation = CreateToolRequest.class))
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            schema = @Schema(implementation = CreateToolForm.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Tool created successfully"),
@@ -98,9 +99,10 @@ public class ToolsController {
             }
     )
     public ResponseEntity<?> createTool( Authentication auth,
-                                        @RequestParam String name,
-                                        @RequestParam String description,
-                                        @RequestParam MultipartFile image) {
+                                         @RequestParam String name,
+                                         @RequestParam String description,
+                                         @RequestParam MultipartFile image
+    ) {
         try {
             User user = (User) auth.getPrincipal();
             toolsService.createTool( user, name, description, image);
@@ -134,5 +136,17 @@ public class ToolsController {
         catch (NotAllowedToGetBorrowRequestTool e){
             return errorService.buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
         }
+    }
+
+    @Schema(name = "ToolForm", description = "Form data for creating a tool")
+    private static class CreateToolForm {
+        @Schema(description = "Name of the tool")
+        public String name;
+
+        @Schema(description = "Description of the tool")
+        public String description;
+
+        @Schema(description = "Image file", type = "string", format = "binary")
+        public MultipartFile image;
     }
 }

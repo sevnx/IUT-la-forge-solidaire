@@ -1,6 +1,8 @@
 package desforge.dev.models.tools;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.web.multipart.MultipartFile;
 
 public class CreateToolRequest {
 
@@ -11,7 +13,7 @@ public class CreateToolRequest {
     private String description;
 
     @NotBlank
-    private String imagePath;
+    private MultipartFile imageSrc;
 
     public CreateToolRequest() {
     }
@@ -32,11 +34,11 @@ public class CreateToolRequest {
         this.description = description;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public MultipartFile getImageSrc() {
+        return imageSrc;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setImageSrc(MultipartFile imageSrc) {
+        this.imageSrc = imageSrc;
     }
 }

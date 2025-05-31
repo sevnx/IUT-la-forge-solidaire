@@ -7,24 +7,22 @@ import desforge.dev.enumerations.BorrowRequestState;
 import desforge.dev.errors.borrow_request.BorrowRequestAlreadyExistsException;
 import desforge.dev.errors.borrow.CannotBorrowOwnToolException;
 import desforge.dev.errors.tools.NotAllowedToGetBorrowRequestTool;
+import desforge.dev.errors.tools.ToolAlreadyBorrowedException;
 import desforge.dev.errors.tools.ToolNotExistsException;
 import desforge.dev.models.borrow_request.CreateBorrowRequest;
-import desforge.dev.models.tools.CreateToolRequest;
 import desforge.dev.models.tools.ToolBorrowRequest;
 import desforge.dev.models.tools.ToolResponse;
 import desforge.dev.models.user.ToolUserResponse;
 import desforge.dev.repositories.BorrowRepository;
 import desforge.dev.repositories.BorrowRequestRepository;
 import desforge.dev.repositories.ToolRepository;
-import desforge.dev.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -41,24 +39,27 @@ public class ToolService implements IToolService {
     private BorrowRepository borrowRepository;
 
     @Autowired
-    private IFileService fileService;
+    private IImageService fileService;
+
+    @Value("${image.url}")
+    private String imageUrl;
 
     @Override
     public void createTool(User user, String name, String description, MultipartFile image) throws ToolNotExistsException {
-        fileService.storeFile(image);
+        String imgPath = image.getOriginalFilename();
+        if (imgPath == null) {
+            throw new ToolNotExistsException("Image not found");
+        }
+        int dotIndex = imgPath.lastIndexOf(".");
+        String extension = imgPath.substring(dotIndex + 1);
+        if (!extension.equals("png") && !extension.equals("jpg") && !extension.equals("jpeg")) {
+            throw new IllegalArgumentException("Invalid extension: " + extension);
+        }
 
-//        String imgPath = request.getImagePath();
-//        int dotIndex = imgPath.lastIndexOf(".");
-//        String extension = imgPath.substring(dotIndex + 1);
-//        if (!extension.equals("png") && !extension.equals("jpg") && !extension.equals("jpeg")) {
-//            throw new IllegalArgumentException();
-//        }
-//        File file = new File(imgPath);
-//        if(!file.exists() || file.isDirectory()) {
-//            throw new IllegalArgumentException();
-//        }
+        String toolName = fileService.storeFile(image);
+
         Tool tool = new Tool();
-        tool.setPhoto("hello");
+        tool.setImageSrc(imageUrl+toolName);
         tool.setDescription(description);
         tool.setName(name);
         tool.setOwner(user);
@@ -67,7 +68,7 @@ public class ToolService implements IToolService {
 
     @Override
     public void createBorrowRequest(int idTool, @Valid CreateBorrowRequest createborrowRequest, User user)
-            throws ToolNotExistsException, BorrowRequestAlreadyExistsException {
+            throws ToolNotExistsException, BorrowRequestAlreadyExistsException, ToolAlreadyBorrowedException {
         Tool tool = toolRepository.findById(idTool).orElseThrow(() -> new ToolNotExistsException("Tool not found"));
         Date date = createborrowRequest.getReturnDate();
         if (date.before(new Date())) {
@@ -82,6 +83,9 @@ public class ToolService implements IToolService {
             throw new CannotBorrowOwnToolException("User not allowed to borrow own tool");
         }
 
+        if (borrowRepository.findBytoolBorrow(tool) != null) {
+            throw new ToolAlreadyBorrowedException("This tool has already been borrowed");
+        }
         BorrowRequest borrowRequest = new BorrowRequest();
         borrowRequest.setRequestDate(new Date());
         borrowRequest.setUserBorrowRequest(user);
@@ -90,6 +94,7 @@ public class ToolService implements IToolService {
         borrowRequest.setState(BorrowRequestState.PENDING);
         borrowRequestRepository.save(borrowRequest);
     }
+
     @Override
     public List<ToolUserResponse> getUserTools(User user) {
         // Implementation logic to retrieve tools for the user
@@ -100,7 +105,7 @@ public class ToolService implements IToolService {
                     response.setToolNumber(tool.getIdTool());
                     response.setToolName(tool.getName());
                     response.setDescription(tool.getDescription());
-                    response.setImage(tool.getPhoto());
+                    response.setImageSrc(tool.getImageSrc());
                     if(borrowRepository.existsBytoolBorrow(tool)) {
                         response.setAvailableAt(borrowRepository.findBytoolBorrow(tool).getDateReturn());
                     } else {
@@ -111,6 +116,7 @@ public class ToolService implements IToolService {
                 .toList();
 
     }
+
     @Override
     public List<ToolResponse> getAllTools(Authentication authentication) {
         // Implementation logic to retrieve all tools
@@ -121,8 +127,11 @@ public class ToolService implements IToolService {
                     response.setIdTool(tool.getIdTool());
                     response.setName(tool.getName());
                     response.setDescription(tool.getDescription());
-                    response.setImageUrl(tool.getPhoto());
-                    response.setAvailableAt(borrowRepository.findBytoolBorrow(tool).getDateReturn());
+                    response.setImageSrc(tool.getImageSrc());
+
+                    if (borrowRepository.findBytoolBorrow(tool) != null) {
+                        response.setAvailableAt(borrowRepository.findBytoolBorrow(tool).getDateReturn());
+                    }
                     if(authentication != null) {
                         response.setAddress(tool.getOwner().getAddress());
                     }
@@ -132,6 +141,7 @@ public class ToolService implements IToolService {
                 .toList();
     }
 
+    @Override
     public List<ToolBorrowRequest> getBorrowRequestsByTool(int toolId,User user){
         Tool tool = toolRepository.findById(toolId).orElseThrow(() -> new ToolNotExistsException("Tool not found"));
         if(!tool.getOwner().getIdUser().equals(user.getIdUser())) {

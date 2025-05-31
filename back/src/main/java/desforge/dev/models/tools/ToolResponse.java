@@ -6,7 +6,7 @@ public class ToolResponse {
     private int idTool;
     private String name;
     private String description;
-    private String imageUrl;
+    private String imageSrc;
     private String address;
     private Date availableAt;
 
@@ -34,12 +34,12 @@ public class ToolResponse {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageSrc() {
+        return imageSrc;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageSrc(String imageSrc) {
+        this.imageSrc = imageSrc;
     }
 
     public String getAddress() {

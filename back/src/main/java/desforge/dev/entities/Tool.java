@@ -20,7 +20,7 @@ public class Tool {
     private String description;
 
     @Column(nullable = false)
-    private String photo;
+    private String imageSrc;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_TOOL_OWNER"))
@@ -37,10 +37,10 @@ public class Tool {
     public Tool() {
     }
 
-    public Tool(String name, String description, String photo, User owner) {
+    public Tool(String name, String description, String imageSrc, User owner) {
          this.name = name;
         this.description = description;
-        this.photo = photo;
+        this.imageSrc = imageSrc;
         this.owner = owner;
         this.borrowRequests = new ArrayList<>();
         this.borrows = new ArrayList<>();
@@ -70,12 +70,12 @@ public class Tool {
         this.description = description;
     }
 
-    public String getPhoto() {
-        return photo;
+    public String getImageSrc() {
+        return imageSrc;
     }
 
-    public void setPhoto(String photo) throws IllegalArgumentException {
-        this.photo = photo;
+    public void setImageSrc(String imageSrc) {
+        this.imageSrc = imageSrc;
     }
 
     public User getOwner() {

@@ -41,13 +41,11 @@ public class BorrowRequestService implements IBorrowRequestService{
             Borrow borrow = new Borrow();
             borrow.setUserBorrow(borrowRequest.getUserBorrowRequest());
             borrow.setToolBorrow(borrowRequest.getToolBorrowRequest());
-            borrow.setDateBorrow(new Date()); // maintenant
-            borrow.setDateReturn(borrowRequest.getReturnDate()); // date prévue de retour
+            borrow.setDateBorrow(new Date());
+            borrow.setDateReturn(borrowRequest.getReturnDate());
 
             borrowRepository.save(borrow);
         }
-
-
         borrowRequestRepository.save(borrowRequest);
     }
 
@@ -57,7 +55,7 @@ public class BorrowRequestService implements IBorrowRequestService{
             BorrowRequestUserResponse response = new BorrowRequestUserResponse();
             response.setName(borrowRequest.getToolBorrowRequest().getName());
             response.setDescription(borrowRequest.getToolBorrowRequest().getDescription());
-            response.setImage(borrowRequest.getToolBorrowRequest().getPhoto());
+            response.setImageSrc(borrowRequest.getToolBorrowRequest().getImageSrc());
             return response;
         }).toList();
     }
