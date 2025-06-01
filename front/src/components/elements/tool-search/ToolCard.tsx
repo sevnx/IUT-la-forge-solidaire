@@ -11,6 +11,8 @@ import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 import { createToolBorrow } from '@/api/tools/borrows';
 import { toast } from 'sonner';
+import { AuthState, useAuth } from '@/context/AuthContext';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export interface ToolCardProps {
   tool: Tool;
@@ -18,6 +20,7 @@ export interface ToolCardProps {
 }
 
 export function ToolCard({ tool, className }: ToolCardProps) {
+  const { state } = useAuth();
   const available = tool.availableAt ? false : true;
   const [returnDate, setReturnDate] = useState<Date | undefined>(undefined);
   const [open, setOpen] = useState(false);
@@ -77,8 +80,15 @@ export function ToolCard({ tool, className }: ToolCardProps) {
       <CardFooter className="flex-shrink-0 mt-auto">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button className="w-full" disabled={!available}>
-              Emprunter
+            <Button className="w-full" disabled={!available || state !== AuthState.LoggedIn}>
+              {state === AuthState.LoggedOut ? (
+                <Tooltip>
+                  <TooltipTrigger>Emprunter</TooltipTrigger>
+                  <TooltipContent>Connectez-vous pour emprunter</TooltipContent>
+                </Tooltip>
+              ) : (
+                "Emprunter"
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">

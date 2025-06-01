@@ -14,10 +14,9 @@ export const Route = createFileRoute('/auth/register')({
 });
 
 const password = type.string
-  .atLeastLength(8)
-  .atMostLength(32)
+  .atLeastLength(12)
   .configure({
-    message: 'Le mot de passe doit contenir entre 8 et 32 caractères',
+    message: 'Le mot de passe doit contenir au moins 12 caractères',
   })
   .narrow((data, ctx) => {
     const hasUpper = /[A-Z]/.test(data);

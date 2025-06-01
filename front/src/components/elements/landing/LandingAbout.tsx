@@ -6,7 +6,7 @@ export function LandingAbout() {
     {
       icon: ListOrdered,
       title: 'Inscription',
-      description: 'Créez votre compte en quelques minutes avec votre email.',
+      description: 'Créez votre compte en quelques minutes avec un identifiant et un mot de passe.',
     },
     {
       icon: Search,
@@ -50,7 +50,7 @@ export function LandingAbout() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-orange-500 rounded-3xl transform rotate-3"></div>
             <img
-              src="/assets/community-tools-sharing.jpg"
+              src="/community-tools-sharing.png"
               alt="Personnes partageant des outils dans une communauté locale"
               width={600}
               height={500}
