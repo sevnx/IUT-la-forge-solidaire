@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { FileDropZone } from '@/components/ui/file-drop-zone';
 import { createTool } from '@/api/tools/tools';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 
 export interface ToolCreateSchema {
   name: string;
@@ -18,6 +19,7 @@ export interface UserToolCreateFormProps {
 }
 
 export function UserToolCreateForm({ onSubmit }: UserToolCreateFormProps) {
+  const queryClient = useQueryClient();
   const form = useForm<ToolCreateSchema>({
     defaultValues: {
       name: '',
@@ -54,10 +56,11 @@ export function UserToolCreateForm({ onSubmit }: UserToolCreateFormProps) {
     });
 
     if (result.isErr()) {
-      toast.error('Erreur lors de la création de l\'outil');
+      toast.error("Erreur lors de la création de l'outil");
       return;
     }
     toast.success('Outil créé avec succès');
+    queryClient.invalidateQueries({ queryKey: ['tools'] });
     onSubmit();
   };
 

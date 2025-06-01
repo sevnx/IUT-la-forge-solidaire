@@ -11,13 +11,14 @@ import {
 import { useState } from 'react';
 import { UserToolRequestCard } from './UserToolRequestCard';
 import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface UserToolRequestsDialogProps {
   toolId: number;
 }
 
 export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) {
+  const queryClient = useQueryClient();
   const { data: toolRequests } = useQuery({
     queryKey: ['toolRequests', toolId],
     queryFn: async () => {
@@ -58,6 +59,7 @@ export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) 
                       setIsOpen(false);
                     } else {
                       toast.success("Demande d'emprunt refusée avec succès");
+                      queryClient.invalidateQueries({ queryKey: ['toolRequests', toolId] });
                     }
                   }
                 }}
