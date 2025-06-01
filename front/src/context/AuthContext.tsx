@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (credentials: LoginRequest): Promise<Result<void, LoginError>> => {
     const result = await loginApi(credentials);
+    console.log(result);
     if (result.isOk()) {
       setState(AuthState.LoggedIn);
     }
@@ -54,9 +55,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async (): Promise<Result<void, LogoutError>> => {
     const result = await logoutApi();
-    if (result.isOk()) {
-      setState(AuthState.LoggedOut);
+    if (result.isErr()) {
+      console.error(result.error);
     }
+    setState(AuthState.LoggedOut);
     return result;
   };
 

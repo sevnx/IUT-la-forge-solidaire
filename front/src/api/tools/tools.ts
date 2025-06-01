@@ -34,7 +34,15 @@ export enum CreateToolError {
 }
 
 export const createTool = (toolDescription: ToolDescription): ResultAsync<void, CreateToolError> => {
-  return ResultAsync.fromPromise(api.post('/tools', toolDescription), () => {
+  const formData = new FormData();
+  formData.append('name', toolDescription.name);
+  formData.append('description', toolDescription.description);
+  formData.append('image', toolDescription.image);
+  return ResultAsync.fromPromise(api.post('/tools', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }), () => {
     return CreateToolError.UnexpectedError;
   });
 };

@@ -18,7 +18,6 @@ export const login = (credentials: LoginRequest): ResultAsync<void, LoginError> 
       if (error.response?.status === 401) {
         return LoginError.InvalidCredentials;
       }
-      return LoginError.UnexpectedError;
     }
     return LoginError.UnexpectedError;
   });
