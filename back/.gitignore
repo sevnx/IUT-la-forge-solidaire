@@ -36,4 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-!**/src/main/ressources/
+src/main/resources/images/
+!src/main/resources/images/.gitkeep

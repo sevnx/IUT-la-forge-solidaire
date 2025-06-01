@@ -28,7 +28,7 @@ jobs:
     - name: Install front-end dependencies
       run: |
         cd front/
-        npm install
+        npm ci --force
 
     - name: Run format check
       run: |
@@ -39,5 +39,3 @@ jobs:
       run: |
         cd front/
         npm run lint
-
-  
