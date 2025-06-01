@@ -33,7 +33,7 @@ export function Dashboard() {
   ];
 
   return (
-    <div className="flex-grow flex items-center justify-center px-20">
+    <div className="flex-grow flex items-center justify-center px-20 bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="flex flex-row gap-4 w-full justify-center items-center">
         {pages.map((page) => (
           <Card key={page.title} {...page} className="flex-1" />

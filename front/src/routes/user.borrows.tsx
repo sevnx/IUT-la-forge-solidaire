@@ -1,9 +1,22 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { UserBorrows } from '@/components/elements/user-borrows/UserBorrows';
+import { getUserBorrows } from '@/api/tools/borrows';
+import { neverthrowToError } from '@/lib/neverthrow';
+import { useQuery } from '@tanstack/react-query';
 
 export const Route = createFileRoute('/user/borrows')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <div>Hello "/borrowed"!</div>;
+  const { data: borrows } = useQuery({
+    queryKey: ['user-borrows'],
+    queryFn: neverthrowToError(getUserBorrows),
+  });
+
+  if (borrows === undefined) {
+    return <div>Loading...</div>;
+  }
+
+  return <UserBorrows borrows={borrows ?? []} requests={[]} />;
 }
