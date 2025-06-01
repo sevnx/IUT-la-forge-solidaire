@@ -16,7 +16,7 @@ export const createToolBorrow = (
   toolId: number,
   borrowDescription: BorrowDescription,
 ): ResultAsync<void, CreateToolBorrowError> => {
-  return ResultAsync.fromPromise(api.post(`/tools/${toolId}/borrow-request`, borrowDescription), (error) => {
+  return ResultAsync.fromPromise(api.post(`/tools/${toolId}/borrow-requests`, borrowDescription), (error) => {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 404) {
         return CreateToolBorrowError.NotFound;
@@ -41,7 +41,7 @@ export enum GetToolBorrowRequestsError {
   NotFound = 'Not found',
 }
 
-export const getToolBorrowRequests = (toolId: string): ResultAsync<ToolBorrowRequest[], GetToolBorrowRequestsError> => {
+export const getToolBorrowRequests = (toolId: number): ResultAsync<ToolBorrowRequest[], GetToolBorrowRequestsError> => {
   return ResultAsync.fromPromise(api.get(`/tools/${toolId}/borrow-requests`), (error) => {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 404) {

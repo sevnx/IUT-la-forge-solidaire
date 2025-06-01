@@ -18,8 +18,6 @@ function RouteComponent() {
     return <div>Loading...</div>;
   }
 
-  console.log(tools);
-
   return (
     <UserTools
       tools={tools ?? []}

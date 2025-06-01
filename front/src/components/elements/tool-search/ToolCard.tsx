@@ -27,7 +27,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
       return;
     }
 
-    const result = await createToolBorrow(tool.id, {
+    const result = await createToolBorrow(tool.idTool, {
       returnDate: returnDate.toISOString(),
     });
 
@@ -68,9 +68,9 @@ export function ToolCard({ tool, className }: ToolCardProps) {
         <CardDescription>{tool.description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-shrink-0 mt-auto">
-        {tool.ownerAddress && (
+        {tool.address && (
           <p className="text-sm text-muted-foreground mb-2">
-            <span className="font-semibold">Adresse du propriétaire :</span> {tool.ownerAddress}
+            <span className="font-semibold">Adresse du propriétaire :</span> {tool.address}
           </p>
         )}
       </CardContent>

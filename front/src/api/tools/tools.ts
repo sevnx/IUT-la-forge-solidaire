@@ -2,13 +2,13 @@ import api from '@/lib/api';
 import { okAsync, ResultAsync } from 'neverthrow';
 
 export interface Tool {
-  id: number;
+  idTool: number;
   name: string;
   description: string;
   imageSrc: string;
   // Time in ISO 8601 format
   availableAt?: string;
-  ownerAddress?: string;
+  address?: string;
 }
 
 export enum GetToolError {

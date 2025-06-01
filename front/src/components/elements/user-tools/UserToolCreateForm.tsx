@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { FileDropZone } from '@/components/ui/file-drop-zone';
 import { createTool } from '@/api/tools/tools';
+import { toast } from 'sonner';
 
 export interface ToolCreateSchema {
   name: string;
@@ -12,7 +13,11 @@ export interface ToolCreateSchema {
   image: File | null;
 }
 
-export function UserToolCreateForm() {
+export interface UserToolCreateFormProps {
+  onSubmit: () => void;
+}
+
+export function UserToolCreateForm({ onSubmit }: UserToolCreateFormProps) {
   const form = useForm<ToolCreateSchema>({
     defaultValues: {
       name: '',
@@ -21,7 +26,7 @@ export function UserToolCreateForm() {
     },
   });
 
-  const onSubmit = (data: ToolCreateSchema) => {
+  const handleSubmit = async (data: ToolCreateSchema) => {
     let error = false;
     if (data.name.length === 0) {
       form.setError('name', { message: 'Le nom est requis' });
@@ -42,16 +47,23 @@ export function UserToolCreateForm() {
       return;
     }
 
-    createTool({
+    const result = await createTool({
       name: data.name,
       description: data.description,
       image: data.image as File,
     });
+
+    if (result.isErr()) {
+      toast.error('Erreur lors de la création de l\'outil');
+      return;
+    }
+    toast.success('Outil créé avec succès');
+    onSubmit();
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"

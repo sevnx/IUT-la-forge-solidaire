@@ -9,10 +9,17 @@ import {
 } from '@/components/ui/dialog';
 import { Plus } from 'lucide-react';
 import { UserToolCreateForm } from './UserToolCreateForm';
+import { useState } from 'react';
 
 export function UserToolCreateDialog() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline">
           <Plus className="h-4 w-4" />
@@ -24,7 +31,7 @@ export function UserToolCreateDialog() {
           <DialogTitle>Ajouter un outil</DialogTitle>
           <DialogDescription>Ajoutez un outil à votre inventaire</DialogDescription>
         </DialogHeader>
-        <UserToolCreateForm />
+        <UserToolCreateForm onSubmit={() => handleOpenChange(false)} />
       </DialogContent>
     </Dialog>
   );

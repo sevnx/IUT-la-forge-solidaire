@@ -46,7 +46,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (credentials: LoginRequest): Promise<Result<void, LoginError>> => {
     const result = await loginApi(credentials);
-    console.log(result);
     if (result.isOk()) {
       setState(AuthState.LoggedIn);
     }
