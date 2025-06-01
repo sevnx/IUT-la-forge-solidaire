@@ -5,6 +5,7 @@ import desforge.dev.entities.BorrowRequest;
 import desforge.dev.entities.User;
 import desforge.dev.enumerations.BorrowRequestState;
 import desforge.dev.errors.borrow_request.BorrowRequestNotFoundException;
+import desforge.dev.errors.borrow_request.BorrowRequestNotPendingException;
 import desforge.dev.errors.borrow_request.NotAllowedStateBorrowRequestException;
 import desforge.dev.models.user.BorrowRequestUserResponse;
 import desforge.dev.repositories.BorrowRepository;
@@ -26,12 +27,17 @@ public class BorrowRequestService implements IBorrowRequestService{
     public void setBorrowRequestStatus(int idRequest, BorrowRequestState status,User user) {
         BorrowRequest borrowRequest = borrowRequestRepository.findByidRequest(idRequest)
                 .orElseThrow(() -> new BorrowRequestNotFoundException("Borrow request not found"));
-        if(!borrowRequest.getToolBorrowRequest().getOwner().getIdUser().equals(user.getIdUser())) {
+        if (!borrowRequest.getToolBorrowRequest().getOwner().getIdUser().equals(user.getIdUser())) {
             throw new NotAllowedStateBorrowRequestException("User not allowed to change the state of this borrow request");
         }
         if (borrowRequest.getState() == BorrowRequestState.ACCEPTED && status == BorrowRequestState.REFUSED) {
             throw new IllegalArgumentException("Cannot change state from ACCEPTED to REFUSED");
         }
+
+        if (borrowRequest.getState() != BorrowRequestState.PENDING) {
+            throw new BorrowRequestNotPendingException("Borrow request not pending");
+        }
+
         List<BorrowRequest> borrowRequests = borrowRequestRepository.findBytoolBorrowRequest(borrowRequest.getToolBorrowRequest());
         for (BorrowRequest request : borrowRequests) {
                 request.setState(BorrowRequestState.REFUSED);
@@ -59,5 +65,4 @@ public class BorrowRequestService implements IBorrowRequestService{
             return response;
         }).toList();
     }
-
 }

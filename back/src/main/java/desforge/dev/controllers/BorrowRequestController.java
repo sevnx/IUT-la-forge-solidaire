@@ -3,6 +3,7 @@ package desforge.dev.controllers;
 
 import desforge.dev.entities.User;
 import desforge.dev.errors.borrow_request.BorrowRequestNotFoundException;
+import desforge.dev.errors.borrow_request.BorrowRequestNotPendingException;
 import desforge.dev.errors.borrow_request.NotAllowedStateBorrowRequestException;
 import desforge.dev.models.borrow_request.BorrowRequestsStateRequest;
 import desforge.dev.models.error.ErrorResponse;
@@ -43,6 +44,8 @@ public class BorrowRequestController {
                     @ApiResponse(responseCode = "403", description = "Not allowed to change the state of this borrow request",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                     @ApiResponse(responseCode = "400", description = "Not allowed to change the state of this borrow request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "409", description = "Borrow request not pending",
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
@@ -52,15 +55,14 @@ public class BorrowRequestController {
             User user = (User) authentication.getPrincipal();
             borrowRequestService.setBorrowRequestStatus(requestId, borrowRequestState.getState(), user);
             return ResponseEntity.status(HttpStatus.OK).build();
-        }
-        catch (BorrowRequestNotFoundException e){
+        } catch (BorrowRequestNotFoundException e){
             return errorService.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-        catch(NotAllowedStateBorrowRequestException e){
+        } catch(NotAllowedStateBorrowRequestException e){
             return errorService.buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e){
             return errorService.buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (BorrowRequestNotPendingException e) {
+            return errorService.buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 }
