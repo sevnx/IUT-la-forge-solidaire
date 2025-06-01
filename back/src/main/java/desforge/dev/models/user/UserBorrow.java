@@ -1,22 +1,13 @@
-package desforge.dev.models.tools;
+package desforge.dev.models.user;
 
 import java.util.Date;
 
-public class ToolResponse {
-    private int id;
+public class UserBorrow {
     private String name;
     private String description;
     private String imageSrc;
-    private String address;
-    private Date availableAt;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private Date dateReturn;
+    private Date dateRequest;
 
     public String getName() {
         return name;
@@ -42,21 +33,19 @@ public class ToolResponse {
         this.imageSrc = imageSrc;
     }
 
-    public String getAddress() {
-        return address;
+    public Date getDateReturn() {
+        return dateReturn;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setDateReturn(Date dateReturn) {
+        this.dateReturn = dateReturn;
     }
 
-    public Date getAvailableAt() {
-        return availableAt;
+    public Date getDateRequest() {
+        return dateRequest;
     }
 
-    public void setAvailableAt(Date availableAt) {
-        this.availableAt = availableAt;
+    public void setDateRequest(Date dateRequest) {
+        this.dateRequest = dateRequest;
     }
-
-
 }

@@ -7,7 +7,7 @@ import desforge.dev.enumerations.BorrowRequestState;
 import desforge.dev.errors.borrow_request.BorrowRequestNotFoundException;
 import desforge.dev.errors.borrow_request.BorrowRequestNotPendingException;
 import desforge.dev.errors.borrow_request.NotAllowedStateBorrowRequestException;
-import desforge.dev.models.user.BorrowRequestUserResponse;
+import desforge.dev.models.user.UserBorrowRequest;
 import desforge.dev.repositories.BorrowRepository;
 import desforge.dev.repositories.BorrowRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class BorrowRequestService implements IBorrowRequestService {
     private BorrowRepository borrowRepository;
 
     public void setBorrowRequestStatus(int idRequest, BorrowRequestState status, User user) {
-        BorrowRequest borrowRequest = borrowRequestRepository.findByidRequest(idRequest)
+        BorrowRequest borrowRequest = borrowRequestRepository.findByIdRequest(idRequest)
                 .orElseThrow(() -> new BorrowRequestNotFoundException("Borrow request not found"));
         if (!borrowRequest.getToolBorrowRequest().getOwner().getIdUser().equals(user.getIdUser())) {
             throw new NotAllowedStateBorrowRequestException("User not allowed to change the state of this borrow request");
@@ -38,7 +38,7 @@ public class BorrowRequestService implements IBorrowRequestService {
             throw new BorrowRequestNotPendingException("Borrow request not pending");
         }
 
-        List<BorrowRequest> borrowRequests = borrowRequestRepository.findBytoolBorrowRequest(borrowRequest.getToolBorrowRequest());
+        List<BorrowRequest> borrowRequests = borrowRequestRepository.findByToolBorrowRequest(borrowRequest.getToolBorrowRequest());
         for (BorrowRequest request : borrowRequests) {
             request.setState(BorrowRequestState.REFUSED);
         }
@@ -55,10 +55,10 @@ public class BorrowRequestService implements IBorrowRequestService {
         borrowRequestRepository.save(borrowRequest);
     }
 
-    public List<BorrowRequestUserResponse> getBorrowRequestsByUser(User user, BorrowRequestState state) {
+    public List<UserBorrowRequest> getBorrowRequestsByUser(User user, BorrowRequestState state) {
         List<BorrowRequest> borrowRequests = borrowRequestRepository.findByUserBorrowRequestAndState(user, state);
         return borrowRequests.stream().map(borrowRequest -> {
-            BorrowRequestUserResponse response = new BorrowRequestUserResponse();
+            UserBorrowRequest response = new UserBorrowRequest();
             response.setName(borrowRequest.getToolBorrowRequest().getName());
             response.setDescription(borrowRequest.getToolBorrowRequest().getDescription());
             response.setImageSrc(borrowRequest.getToolBorrowRequest().getImageSrc());

@@ -2,8 +2,8 @@ package desforge.dev.controllers;
 
 import desforge.dev.errors.auth.LoginException;
 import desforge.dev.errors.auth.RegisterException;
-import desforge.dev.models.auth.LoginRequest;
-import desforge.dev.models.auth.RegisterRequest;
+import desforge.dev.models.auth.Login;
+import desforge.dev.models.auth.Register;
 import desforge.dev.models.error.ErrorResponse;
 import desforge.dev.services.IAuthService;
 import desforge.dev.services.ICookieService;
@@ -51,7 +51,7 @@ public class AuthController {
             description = "Creates a new user and returns a JWT token in a cookie.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "User registration data",
-                    content = @Content(schema = @Schema(implementation = RegisterRequest.class))
+                    content = @Content(schema = @Schema(implementation = Register.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Registration successful (the token is sent in a cookie)."),
@@ -62,7 +62,7 @@ public class AuthController {
 
             }
     )
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest, HttpServletResponse response) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody Register registerRequest, HttpServletResponse response) {
         try {
             String token = authService.register(registerRequest);
 
@@ -84,7 +84,7 @@ public class AuthController {
             description = "Logs in a user and returns a JWT token in a cookie.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "User login data",
-                    content = @Content(schema = @Schema(implementation = LoginRequest.class))
+                    content = @Content(schema = @Schema(implementation = Login.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Login successful (the token is sent in a cookie)"),
@@ -92,9 +92,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody Login login, HttpServletResponse response) {
         try {
-            String token = authService.login(loginRequest);
+            String token = authService.login(login);
 
             ResponseCookie cookie = cookieService.addCookie(cookieName, token, cookieExpirationMs);
 

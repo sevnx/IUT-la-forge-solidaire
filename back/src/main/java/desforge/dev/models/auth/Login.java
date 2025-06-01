@@ -2,7 +2,7 @@ package desforge.dev.models.auth;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class LoginRequest {
+public class Login {
 
     @NotBlank
     private String login;
@@ -10,7 +10,7 @@ public class LoginRequest {
     @NotBlank
     private String password;
 
-    public LoginRequest() {
+    public Login() {
     }
 
     public String getLogin() {

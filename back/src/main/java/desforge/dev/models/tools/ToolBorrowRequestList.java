@@ -1,10 +1,8 @@
-package desforge.dev.models.tools.wrapper;
-
-import desforge.dev.models.tools.ToolBorrowRequest;
+package desforge.dev.models.tools;
 
 import java.util.List;
 
-public class ToolBorrowRequestWrapper {
+public class ToolBorrowRequestList {
 
     private List<ToolBorrowRequest> borrowRequests;
 

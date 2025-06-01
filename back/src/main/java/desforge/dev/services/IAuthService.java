@@ -1,12 +1,12 @@
 package desforge.dev.services;
 
 import desforge.dev.errors.auth.RegisterException;
-import desforge.dev.models.auth.LoginRequest;
-import desforge.dev.models.auth.RegisterRequest;
+import desforge.dev.models.auth.Login;
+import desforge.dev.models.auth.Register;
 
 public interface IAuthService {
 
-    String login(LoginRequest request);
+    String login(Login request);
 
-    String register(RegisterRequest registerRequest) throws RegisterException, IllegalArgumentException;
+    String register(Register registerRequest) throws RegisterException, IllegalArgumentException;
 }

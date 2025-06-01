@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BorrowRequestRepository extends JpaRepository<BorrowRequest, Integer> {
-    Optional<BorrowRequest> findByidRequest(int idRequest);
+    Optional<BorrowRequest> findByIdRequest(int idRequest);
 
-    List<BorrowRequest> findBytoolBorrowRequest(Tool toolBorrowRequest);
+    List<BorrowRequest> findByToolBorrowRequest(Tool toolBorrowRequest);
 
-    List<BorrowRequest> findBytoolBorrowRequestAndState(Tool toolBorrowRequest, BorrowRequestState state);
+    List<BorrowRequest> findByToolBorrowRequestAndState(Tool toolBorrowRequest, BorrowRequestState state);
 
     List<BorrowRequest> findByUserBorrowRequestAndState(User userBorrowRequest, BorrowRequestState state);
 

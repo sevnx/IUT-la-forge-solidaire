@@ -4,11 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
-public class CreateBorrowRequest {
+public class BorrowRequestCreate {
     @NotBlank
     private Date ReturnDate;
 
-    public CreateBorrowRequest() {
+    public BorrowRequestCreate() {
     }
 
     public Date getReturnDate() {

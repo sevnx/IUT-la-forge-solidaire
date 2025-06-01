@@ -1,13 +1,13 @@
-package desforge.dev.models.user;
+package desforge.dev.models.tools;
 
 import java.util.Date;
 
-public class ToolUserResponse {
+public class Tool {
     private int id;
     private String name;
     private String description;
     private String imageSrc;
-
+    private String address;
     private Date availableAt;
 
     public int getId() {
@@ -40,6 +40,14 @@ public class ToolUserResponse {
 
     public void setImageSrc(String imageSrc) {
         this.imageSrc = imageSrc;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Date getAvailableAt() {

@@ -3,7 +3,7 @@ package desforge.dev.models.borrow_request;
 import desforge.dev.enumerations.BorrowRequestState;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class BorrowRequestsStateRequest {
+public class BorrowRequestsUpdateState {
     @Schema(
             description = "New state for the borrow request. Only 'ACCEPTED' or 'REFUSED' are allowed.",
             allowableValues = {"ACCEPTED", "REFUSED"}

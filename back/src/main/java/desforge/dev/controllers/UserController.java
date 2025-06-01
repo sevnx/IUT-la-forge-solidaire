@@ -4,9 +4,9 @@ package desforge.dev.controllers;
 import desforge.dev.entities.User;
 import desforge.dev.enumerations.BorrowRequestState;
 import desforge.dev.models.error.ErrorResponse;
-import desforge.dev.models.user.wrapper.BorrowRequestUserResponseWrapper;
-import desforge.dev.models.user.wrapper.BorrowUserResponseWrapper;
-import desforge.dev.models.user.wrapper.ToolUserResponseWrapper;
+import desforge.dev.models.user.UserBorrowRequestList;
+import desforge.dev.models.user.UserBorrowList;
+import desforge.dev.models.user.UserToolList;
 import desforge.dev.services.IBorrowRequestService;
 import desforge.dev.services.IBorrowService;
 import desforge.dev.services.IToolService;
@@ -44,9 +44,9 @@ public class UserController {
                     @ApiResponse(responseCode = "200", description = "Tools retrieved successfully")
             }
     )
-    public ResponseEntity<ToolUserResponseWrapper> getUserTools(Authentication authentication) {
+    public ResponseEntity<UserToolList> getUserTools(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        ToolUserResponseWrapper toolUserResponseWrapper = new ToolUserResponseWrapper();
+        UserToolList toolUserResponseWrapper = new UserToolList();
         toolUserResponseWrapper.setData(toolService.getUserTools(user));
         return ResponseEntity.ok(toolUserResponseWrapper);
     }
@@ -60,9 +60,9 @@ public class UserController {
                     @ApiResponse(responseCode = "200", description = "Borrows retrieved successfully")
             }
     )
-    public ResponseEntity<BorrowUserResponseWrapper> getUserBorrows(Authentication authentication) {
+    public ResponseEntity<UserBorrowList> getUserBorrows(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        BorrowUserResponseWrapper responseWrapper = new BorrowUserResponseWrapper();
+        UserBorrowList responseWrapper = new UserBorrowList();
         responseWrapper.setData(borrowService.getUserBorrow(user));
         return ResponseEntity.ok(responseWrapper);
     }
@@ -76,11 +76,11 @@ public class UserController {
                     @ApiResponse(responseCode = "200", description = "Pending borrow requests retrieved successfully")
             }
     )
-    public ResponseEntity<BorrowRequestUserResponseWrapper> getUserPendingBorrowRequests
+    public ResponseEntity<UserBorrowRequestList> getUserPendingBorrowRequests
             (Authentication authentication,
              @RequestParam(required = false, defaultValue = "PENDING") BorrowRequestState state) {
         User user = (User) authentication.getPrincipal();
-        BorrowRequestUserResponseWrapper responseWrapper = new BorrowRequestUserResponseWrapper();
+        UserBorrowRequestList responseWrapper = new UserBorrowRequestList();
         responseWrapper.setData(borrowRequestService.getBorrowRequestsByUser(user, state));
         return ResponseEntity.ok(responseWrapper);
     }

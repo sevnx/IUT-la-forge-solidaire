@@ -2,7 +2,7 @@ package desforge.dev.models.user;
 
 import java.util.Date;
 
-public class BorrowRequestUserResponse {
+public class UserBorrowRequest {
 
     private String name;
     private String description;

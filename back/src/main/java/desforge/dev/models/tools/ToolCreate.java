@@ -3,7 +3,7 @@ package desforge.dev.models.tools;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
-public class CreateToolRequest {
+public class ToolCreate {
 
     @NotBlank
     private String name;
@@ -14,7 +14,7 @@ public class CreateToolRequest {
     @NotBlank
     private MultipartFile imageSrc;
 
-    public CreateToolRequest() {
+    public ToolCreate() {
     }
 
     public String getName() {

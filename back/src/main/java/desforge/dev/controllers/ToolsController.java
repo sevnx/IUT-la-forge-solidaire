@@ -6,9 +6,9 @@ import desforge.dev.errors.borrow_request.BorrowRequestAlreadyExistsException;
 import desforge.dev.errors.tools.NotAllowedToGetBorrowRequestTool;
 import desforge.dev.errors.tools.ToolAlreadyBorrowedException;
 import desforge.dev.errors.tools.ToolNotExistsException;
-import desforge.dev.models.borrow_request.CreateBorrowRequest;
+import desforge.dev.models.borrow_request.BorrowRequestCreate;
 import desforge.dev.models.error.ErrorResponse;
-import desforge.dev.models.tools.wrapper.ToolResponseWrapper;
+import desforge.dev.models.tools.ToolList;
 import desforge.dev.services.IErrorService;
 import desforge.dev.services.IToolService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,8 +37,8 @@ public class ToolsController {
     private IErrorService errorService;
 
     @GetMapping(value = "")
-    public ResponseEntity<ToolResponseWrapper> getTools(Authentication authentication) {
-        ToolResponseWrapper toolResponseWrapper = new ToolResponseWrapper();
+    public ResponseEntity<ToolList> getTools(Authentication authentication) {
+        ToolList toolResponseWrapper = new ToolList();
         toolResponseWrapper.setData(toolsService.getAllTools(authentication));
         return ResponseEntity.ok(toolResponseWrapper);
     }
@@ -50,7 +50,7 @@ public class ToolsController {
             description = "Creates a borrow request for the specified tool.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Borrow request data",
-                    content = @Content(schema = @Schema(implementation = CreateBorrowRequest.class))
+                    content = @Content(schema = @Schema(implementation = BorrowRequestCreate.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Borrow request created successfully"),
@@ -64,7 +64,7 @@ public class ToolsController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    public ResponseEntity<?> createBorrowRequest(@PathVariable("toolId") int toolId, @RequestBody CreateBorrowRequest createBorrowRequest,
+    public ResponseEntity<?> createBorrowRequest(@PathVariable("toolId") int toolId, @RequestBody BorrowRequestCreate createBorrowRequest,
 
                                                  Authentication authentication) {
         User user = (User) authentication.getPrincipal();

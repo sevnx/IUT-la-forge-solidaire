@@ -2,12 +2,21 @@ package desforge.dev.models.user;
 
 import java.util.Date;
 
-public class BorrowUserResponse {
+public class UserTool {
+    private int id;
     private String name;
     private String description;
     private String imageSrc;
-    private Date dateReturn;
-    private Date dateRequest;
+
+    private Date availableAt;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -33,19 +42,13 @@ public class BorrowUserResponse {
         this.imageSrc = imageSrc;
     }
 
-    public Date getDateReturn() {
-        return dateReturn;
+    public Date getAvailableAt() {
+        return availableAt;
     }
 
-    public void setDateReturn(Date dateReturn) {
-        this.dateReturn = dateReturn;
+    public void setAvailableAt(Date availableAt) {
+        this.availableAt = availableAt;
     }
 
-    public Date getDateRequest() {
-        return dateRequest;
-    }
 
-    public void setDateRequest(Date dateRequest) {
-        this.dateRequest = dateRequest;
-    }
 }

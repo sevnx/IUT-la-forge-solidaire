@@ -5,7 +5,7 @@ import desforge.dev.entities.User;
 import desforge.dev.errors.borrow_request.BorrowRequestNotFoundException;
 import desforge.dev.errors.borrow_request.BorrowRequestNotPendingException;
 import desforge.dev.errors.borrow_request.NotAllowedStateBorrowRequestException;
-import desforge.dev.models.borrow_request.BorrowRequestsStateRequest;
+import desforge.dev.models.borrow_request.BorrowRequestsUpdateState;
 import desforge.dev.models.error.ErrorResponse;
 import desforge.dev.services.IBorrowRequestService;
 import desforge.dev.services.IErrorService;
@@ -36,7 +36,7 @@ public class BorrowRequestController {
             description = "Updates the state of a borrow request.",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Borrow request state update data",
-                    content = @Content(schema = @Schema(implementation = BorrowRequestsStateRequest.class))
+                    content = @Content(schema = @Schema(implementation = BorrowRequestsUpdateState.class))
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Borrow request state updated successfully"),
@@ -51,7 +51,7 @@ public class BorrowRequestController {
             }
     )
     public ResponseEntity<?> borrowRequestResponse(@PathVariable("requestId") int requestId, Authentication authentication,
-                                                   @Valid @RequestBody BorrowRequestsStateRequest borrowRequestState) {
+                                                   @Valid @RequestBody BorrowRequestsUpdateState borrowRequestState) {
         try {
             User user = (User) authentication.getPrincipal();
             borrowRequestService.setBorrowRequestStatus(requestId, borrowRequestState.getState(), user);

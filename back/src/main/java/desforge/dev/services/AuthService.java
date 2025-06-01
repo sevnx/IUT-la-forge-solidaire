@@ -4,8 +4,8 @@ package desforge.dev.services;
 import desforge.dev.entities.User;
 import desforge.dev.errors.auth.LoginException;
 import desforge.dev.errors.auth.RegisterException;
-import desforge.dev.models.auth.LoginRequest;
-import desforge.dev.models.auth.RegisterRequest;
+import desforge.dev.models.auth.Login;
+import desforge.dev.models.auth.Register;
 import desforge.dev.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class AuthService implements IAuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String login(LoginRequest request) {
+    public String login(Login request) {
         String login = request.getLogin();
         Optional<User> userOpt = userRepository.findByUsername(login);
 
@@ -44,7 +44,7 @@ public class AuthService implements IAuthService {
         return jwtService.generateToken(user.getUsername());
     }
 
-    public String register(@Valid RegisterRequest registerRequest) throws RegisterException, IllegalArgumentException {
+    public String register(@Valid Register registerRequest) throws RegisterException, IllegalArgumentException {
         String login = registerRequest.getLogin();
         String password = registerRequest.getPassword();
         if (!userRepository.existsByUsername(registerRequest.getLogin())) {

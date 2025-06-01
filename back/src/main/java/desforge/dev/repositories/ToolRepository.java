@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ToolRepository extends JpaRepository<Tool, Integer> {
 
-    List<Tool> findByowner(User owner);
+    List<Tool> findByOwner(User owner);
 
     List<Tool> findByOwnerNot(User owner);
 
