@@ -15,7 +15,7 @@ export function UserTools({ tools }: UserToolsProps) {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Mes outils</h1>
-            <p className="mt-2 text-slate-600">Manage and track your tool inventory</p>
+            <p className="mt-2 text-slate-600">Gérez et suivez votre inventaire d'outils</p>
           </div>
           <UserToolCreateDialog />
         </div>
