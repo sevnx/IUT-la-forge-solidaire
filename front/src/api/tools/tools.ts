@@ -51,9 +51,9 @@ export const createTool = (toolDescription: ToolDescription): ResultAsync<void, 
 };
 
 export const getUserTools = (): ResultAsync<Tool[], GetToolError> => {
-   return ResultAsync.fromPromise(api.get('/user/tools'), () => {
+  return ResultAsync.fromPromise(api.get('/user/tools'), () => {
     return GetToolError.UnexpectedError;
-   }).andThen((tools) => {
-     return okAsync(tools.data.data);
-   });
- };
+  }).andThen((tools) => {
+    return okAsync(tools.data.data);
+  });
+};
