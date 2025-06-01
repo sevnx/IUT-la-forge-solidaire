@@ -3,19 +3,19 @@ package desforge.dev.models.tools;
 import java.util.Date;
 
 public class ToolResponse {
-    private int idTool;
+    private int id;
     private String name;
     private String description;
     private String imageSrc;
     private String address;
     private Date availableAt;
 
-    public int getIdTool() {
-        return idTool;
+    public int getId() {
+        return id;
     }
 
-    public void setIdTool(int idTool) {
-        this.idTool = idTool;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

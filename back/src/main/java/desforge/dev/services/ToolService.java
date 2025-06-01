@@ -102,8 +102,8 @@ public class ToolService implements IToolService {
                 .stream()
                 .map(tool -> {
                     ToolUserResponse response = new ToolUserResponse();
-                    response.setToolNumber(tool.getIdTool());
-                    response.setToolName(tool.getName());
+                    response.setId(tool.getIdTool());
+                    response.setName(tool.getName());
                     response.setDescription(tool.getDescription());
                     response.setImageSrc(tool.getImageSrc());
                     if(borrowRepository.existsBytoolBorrow(tool)) {
@@ -124,7 +124,7 @@ public class ToolService implements IToolService {
                 .stream()
                 .map(tool -> {
                     ToolResponse response = new ToolResponse();
-                    response.setIdTool(tool.getIdTool());
+                    response.setId(tool.getIdTool());
                     response.setName(tool.getName());
                     response.setDescription(tool.getDescription());
                     response.setImageSrc(tool.getImageSrc());
@@ -150,7 +150,7 @@ public class ToolService implements IToolService {
         List<BorrowRequest> borrowRequests = borrowRequestRepository.findBytoolBorrowRequestAndState(toolRepository.findById(toolId).orElseThrow(() -> new ToolNotExistsException("Tool not found")), BorrowRequestState.PENDING);
         return borrowRequests.stream().map(borrowRequest -> {
             ToolBorrowRequest response = new ToolBorrowRequest();
-            response.setRequestId(borrowRequest.getIdRequest());
+            response.setId(borrowRequest.getIdRequest());
             response.setUsername(borrowRequest.getUserBorrowRequest().getUsername());
             response.setRequestDate(borrowRequest.getRequestDate());
             response.setReturnDate(borrowRequest.getReturnDate());
