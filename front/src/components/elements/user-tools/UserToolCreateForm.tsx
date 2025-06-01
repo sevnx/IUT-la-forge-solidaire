@@ -60,7 +60,7 @@ export function UserToolCreateForm({ onSubmit }: UserToolCreateFormProps) {
       return;
     }
     toast.success('Outil créé avec succès');
-    queryClient.invalidateQueries({ queryKey: ['tools'] });
+    queryClient.invalidateQueries({ queryKey: ['userTools'] });
     onSubmit();
   };
 

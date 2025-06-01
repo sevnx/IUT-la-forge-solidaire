@@ -54,7 +54,7 @@ export const getToolBorrowRequests = (toolId: number): ResultAsync<ToolBorrowReq
   });
 };
 
-export type ToolBorrowRequestDecision = 'APPROVED' | 'REJECTED';
+export type ToolBorrowRequestDecision = 'ACCEPTED' | 'REFUSED';
 export type ToolBorrowRequestStatus = 'PENDING' | ToolBorrowRequestDecision;
 
 export enum UpdateToolBorrowRequestError {
@@ -67,7 +67,7 @@ export const updateToolBorrowRequest = (
   requestId: number,
   decision: ToolBorrowRequestDecision,
 ): ResultAsync<void, UpdateToolBorrowRequestError> => {
-  return ResultAsync.fromPromise(api.put(`/borrow-requests/${requestId}`, { decision }), (error) => {
+  return ResultAsync.fromPromise(api.put(`/borrow-requests/${requestId}`, { state: decision }), (error) => {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 404) {
         return UpdateToolBorrowRequestError.NotFound;

@@ -54,13 +54,14 @@ export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) 
                   if (result.isErr()) {
                     toast.error("Erreur lors de la mise à jour de la demande d'emprunt");
                   } else {
-                    if (decision === 'APPROVED') {
+                    if (decision === 'ACCEPTED') {
                       toast.success("Demande d'emprunt acceptée avec succès");
+                      queryClient.invalidateQueries({ queryKey: ['userTools'] });
                       setIsOpen(false);
                     } else {
                       toast.success("Demande d'emprunt refusée avec succès");
-                      queryClient.invalidateQueries({ queryKey: ['toolRequests', toolId] });
                     }
+                    queryClient.invalidateQueries({ queryKey: ['toolRequests', toolId] });
                   }
                 }}
               />

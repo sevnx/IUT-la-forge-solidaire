@@ -26,11 +26,11 @@ export function UserToolRequestCard({ request, handleRequestDecision }: UserTool
             <Button
               variant="default"
               className="bg-green-500 hover:bg-green-600"
-              onClick={() => handleRequestDecision(request.id, 'APPROVED')}
+              onClick={() => handleRequestDecision(request.id, 'ACCEPTED')}
             >
               Accepter
             </Button>
-            <Button variant="destructive" onClick={() => handleRequestDecision(request.id, 'REJECTED')}>
+            <Button variant="destructive" onClick={() => handleRequestDecision(request.id, 'REFUSED')}>
               Refuser
             </Button>
           </div>
