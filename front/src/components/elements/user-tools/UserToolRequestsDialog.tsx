@@ -24,10 +24,10 @@ export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) 
     queryFn: async () => {
       const result = await getToolBorrowRequests(toolId);
       if (result.isErr()) {
-        throw new Error('Erreur lors de la récupération des demandes d\'emprunt');
+        throw new Error("Erreur lors de la récupération des demandes d'emprunt");
       }
       return result.value;
-    }
+    },
   });
   const [isOpen, setIsOpen] = useState(false);
 

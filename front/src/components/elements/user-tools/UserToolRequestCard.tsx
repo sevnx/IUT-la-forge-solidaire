@@ -1,11 +1,11 @@
-import type { ToolBorrowRequest, ToolBorrowRequestDecision } from "@/api/tools/borrows";
-import { FormattedDate } from "@/components/core/FormattedDate";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import type { ToolBorrowRequest, ToolBorrowRequestDecision } from '@/api/tools/borrows';
+import { FormattedDate } from '@/components/core/FormattedDate';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 export interface UserToolRequestCardProps {
-    request: ToolBorrowRequest;
-    handleRequestDecision: (requestId: number, decision: ToolBorrowRequestDecision) => void;
+  request: ToolBorrowRequest;
+  handleRequestDecision: (requestId: number, decision: ToolBorrowRequestDecision) => void;
 }
 
 export function UserToolRequestCard({ request, handleRequestDecision }: UserToolRequestCardProps) {
@@ -30,10 +30,7 @@ export function UserToolRequestCard({ request, handleRequestDecision }: UserTool
             >
               Accepter
             </Button>
-            <Button
-              variant="destructive"
-              onClick={() => handleRequestDecision(request.id, 'REJECTED')}
-            >
+            <Button variant="destructive" onClick={() => handleRequestDecision(request.id, 'REJECTED')}>
               Refuser
             </Button>
           </div>

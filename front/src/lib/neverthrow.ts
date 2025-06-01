@@ -1,4 +1,4 @@
-import { ResultAsync } from "neverthrow";
+import { ResultAsync } from 'neverthrow';
 
 export const neverthrowToError = <T, E extends string>(fn: () => ResultAsync<T, E>) => {
   return async () => {

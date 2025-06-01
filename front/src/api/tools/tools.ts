@@ -38,13 +38,16 @@ export const createTool = (toolDescription: ToolDescription): ResultAsync<void, 
   formData.append('name', toolDescription.name);
   formData.append('description', toolDescription.description);
   formData.append('image', toolDescription.image);
-  return ResultAsync.fromPromise(api.post('/tools', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
+  return ResultAsync.fromPromise(
+    api.post('/tools', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
+    () => {
+      return CreateToolError.UnexpectedError;
     },
-  }), () => {
-    return CreateToolError.UnexpectedError;
-  });
+  );
 };
 
 export const getUserTools = (): ResultAsync<Tool[], CreateToolError> => {

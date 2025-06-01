@@ -12,15 +12,11 @@ function RouteComponent() {
   const { data: tools } = useQuery({
     queryKey: ['tools'],
     queryFn: neverthrowToError(getUserTools),
-  })
+  });
 
   if (tools === undefined) {
     return <div>Loading...</div>;
   }
 
-  return (
-    <UserTools
-      tools={tools ?? []}
-    />
-  );
+  return <UserTools tools={tools ?? []} />;
 }
