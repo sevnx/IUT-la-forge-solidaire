@@ -22,6 +22,7 @@ public class BorrowService implements IBorrowService {
                     response.setDescription(borrow.getToolBorrow().getDescription());
                     response.setImageSrc(borrow.getToolBorrow().getImageSrc());
                     response.setDateReturn(borrow.getDateReturn());
+                    response.setDateRequest(borrow.getDateBorrow());
                     return response;
                 })
                 .toList();

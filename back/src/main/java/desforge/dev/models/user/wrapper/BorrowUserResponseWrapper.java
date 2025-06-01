@@ -14,7 +14,4 @@ public class BorrowUserResponseWrapper {
     public void setData(List<BorrowUserResponse> data) {
         this.data = data;
     }
-
-
-
 }
