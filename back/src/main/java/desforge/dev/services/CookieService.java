@@ -11,22 +11,21 @@ public class CookieService implements ICookieService {
     public ResponseCookie addCookie(String name, String value, int expiration) {
         return ResponseCookie.from(name, value)
                 .httpOnly(true)
-                .secure(true)
                 .path("/")
+                .secure(true)
                 .maxAge(expiration)
-                .sameSite(SameSiteCookies.STRICT.toString())
+                .sameSite(SameSiteCookies.NONE.toString())
                 .build();
     }
 
     @Override
     public ResponseCookie removeCookie(String name) {
-
         return ResponseCookie.from(name, null)
                 .httpOnly(true)
-                .secure(true)
                 .path("/")
+                .secure(true)
                 .maxAge(0)
-                .sameSite(SameSiteCookies.STRICT.toString())
+                .sameSite(SameSiteCookies.NONE.toString())
                 .build();
     }
 }
