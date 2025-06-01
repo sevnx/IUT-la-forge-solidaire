@@ -27,7 +27,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
       return;
     }
 
-    const result = await createToolBorrow(tool.idTool, {
+    const result = await createToolBorrow(tool.id, {
       returnDate: returnDate.toISOString(),
     });
 

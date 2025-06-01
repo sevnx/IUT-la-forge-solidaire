@@ -16,20 +16,23 @@ export function UserToolRequestCard({ request, handleRequestDecision }: UserTool
           <div>
             <p className="font-medium">Demande de {request.username}</p>
             <p className="text-sm text-muted-foreground">
-              Date de retour souhaitée: <FormattedDate isoDate={request.dateReturn} />
+              Demande faite le : <FormattedDate isoDate={request.requestDate} />
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Date de retour souhaitée le : <FormattedDate isoDate={request.returnDate} />
             </p>
           </div>
           <div className="flex gap-2">
             <Button
               variant="default"
               className="bg-green-500 hover:bg-green-600"
-              onClick={() => handleRequestDecision(request.requestId, 'APPROVED')}
+              onClick={() => handleRequestDecision(request.id, 'APPROVED')}
             >
               Accepter
             </Button>
             <Button
               variant="destructive"
-              onClick={() => handleRequestDecision(request.requestId, 'REJECTED')}
+              onClick={() => handleRequestDecision(request.id, 'REJECTED')}
             >
               Refuser
             </Button>

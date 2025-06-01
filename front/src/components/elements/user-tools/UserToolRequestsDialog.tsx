@@ -12,7 +12,6 @@ import { useState } from 'react';
 import { UserToolRequestCard } from './UserToolRequestCard';
 import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
-import { neverthrowToError } from '@/lib/neverthrow';
 
 export interface UserToolRequestsDialogProps {
   toolId: number;
@@ -21,8 +20,12 @@ export interface UserToolRequestsDialogProps {
 export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) {
   const { data: toolRequests } = useQuery({
     queryKey: ['toolRequests', toolId],
-    queryFn: () => {
-        return neverthrowToError(() => getToolBorrowRequests(toolId))();
+    queryFn: async () => {
+      const result = await getToolBorrowRequests(toolId);
+      if (result.isErr()) {
+        throw new Error('Erreur lors de la récupération des demandes d\'emprunt');
+      }
+      return result.value;
     }
   });
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +46,7 @@ export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) 
           {toolRequests && toolRequests.length > 0 ? (
             toolRequests.map((request) => (
               <UserToolRequestCard
-                key={request.requestId}
+                key={request.id}
                 request={request}
                 handleRequestDecision={async (requestId, decision) => {
                   const result = await updateToolBorrowRequest(requestId, decision);

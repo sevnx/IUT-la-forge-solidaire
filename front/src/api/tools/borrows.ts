@@ -1,6 +1,6 @@
 import api from '@/lib/api';
 import axios from 'axios';
-import { ResultAsync } from 'neverthrow';
+import { okAsync, ResultAsync } from 'neverthrow';
 
 export interface BorrowDescription {
   returnDate: string;
@@ -30,10 +30,10 @@ export const createToolBorrow = (
 };
 
 export interface ToolBorrowRequest {
-  requestId: number;
+  id: number;
   username: string;
-  dateRequest: string;
-  dateReturn: string;
+  requestDate: string;
+  returnDate: string;
 }
 
 export enum GetToolBorrowRequestsError {
@@ -49,6 +49,8 @@ export const getToolBorrowRequests = (toolId: number): ResultAsync<ToolBorrowReq
       }
     }
     return GetToolBorrowRequestsError.UnexpectedError;
+  }).andThen((response) => {
+    return okAsync(response.data.data);
   });
 };
 

@@ -2,7 +2,7 @@ import api from '@/lib/api';
 import { okAsync, ResultAsync } from 'neverthrow';
 
 export interface Tool {
-  idTool: number;
+  id: number;
   name: string;
   description: string;
   imageSrc: string;

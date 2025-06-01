@@ -11,7 +11,7 @@ export interface UserToolItemProps {
 
 export function UserToolItem({ tool }: UserToolItemProps) {
   return (
-    <Card key={tool.idTool} className="overflow-hidden shadow-md transition-all hover:shadow-lg">
+    <Card key={tool.id} className="overflow-hidden shadow-md transition-all hover:shadow-lg">
       <CardContent className="p-0">
         <div className="flex items-center gap-4 px-6 py-2">
           <div className="flex h-20 w-28 items-center justify-center rounded-xl">
@@ -32,7 +32,7 @@ export function UserToolItem({ tool }: UserToolItemProps) {
                   <CheckCircle className="h-4 w-4" />
                   Disponible
                 </Badge>
-                <UserToolRequestsDialog toolId={tool.idTool} />
+                <UserToolRequestsDialog toolId={tool.id} />
               </div>
             ) : (
               <Badge variant="secondary" className="gap-2 bg-red-50 text-red-700 text-sm py-1.5 px-3">
