@@ -1,7 +1,6 @@
 package desforge.dev.models.user;
 
 import java.util.Date;
-import java.util.Optional;
 
 public class ToolUserResponse {
     private int id;

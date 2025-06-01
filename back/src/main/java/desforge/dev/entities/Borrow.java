@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name="borrow")
+@Table(name = "borrow")
 public class Borrow {
 
     @Id

@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface BorrowRepository extends JpaRepository<Borrow, Integer> {
     List<Borrow> findBorrowByuserBorrow(User userBorrow);
+
     boolean existsBytoolBorrow(Tool toolBorrow);
 
     Borrow findBytoolBorrow(Tool toolBorrow);

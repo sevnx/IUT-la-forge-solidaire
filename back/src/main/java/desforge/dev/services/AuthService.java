@@ -18,22 +18,16 @@ import java.util.Optional;
 @Service
 public class AuthService implements IAuthService {
 
+    private final int MIN_PASSWORD_LENGTH = 12;
+    private final int MIN_LOGIN_LENGTH = 2;
+    private final int MAX_LOGIN_LENGTH = 32;
+    private final String REQUIRED_PASSWORD_CHARS = "!@#$%^&*()_+-={}[]:;\"'<>,.?/\\|~`";
     @Autowired
     private ITokenService jwtService;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    private final int  MIN_PASSWORD_LENGTH = 12;
-
-    private final int  MIN_LOGIN_LENGTH = 2;
-
-    private final int  MAX_LOGIN_LENGTH = 32;
-
-    private final String REQUIRED_PASSWORD_CHARS = "!@#$%^&*()_+-={}[]:;\"'<>,.?/\\|~`";
 
     public String login(LoginRequest request) {
         String login = request.getLogin();

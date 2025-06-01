@@ -5,5 +5,5 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public interface IErrorService {
-     ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String message);
+    ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String message);
 }

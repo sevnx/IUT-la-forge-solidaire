@@ -7,6 +7,7 @@ import java.util.List;
 public class BorrowUserResponseWrapper {
 
     private List<BorrowUserResponse> data;
+
     public List<BorrowUserResponse> getData() {
         return data;
     }

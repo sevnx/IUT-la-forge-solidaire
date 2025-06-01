@@ -16,6 +16,7 @@ import java.util.List;
 public interface IToolService {
 
     void createTool(User user, String name, String description, MultipartFile image);
+
     void createBorrowRequest(int idTool, CreateBorrowRequest createborrowRequest, User user)
             throws ToolNotExistsException, BorrowRequestAlreadyExistsException, ToolAlreadyBorrowedException;
 
@@ -23,5 +24,5 @@ public interface IToolService {
 
     List<ToolResponse> getAllTools(Authentication authentication);
 
-    List<ToolBorrowRequest> getBorrowRequestsByTool(int toolId,User user);
+    List<ToolBorrowRequest> getBorrowRequestsByTool(int toolId, User user);
 }

@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idUser;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String username;
 
     private String password;
@@ -29,7 +29,7 @@ public class User {
     @OneToMany(mappedBy = "idBorrow")
     private List<Borrow> borrows;
 
-    public User(){
+    public User() {
         ownedTools = new ArrayList<>();
         borrowRequests = new ArrayList<>();
         borrows = new ArrayList<>();

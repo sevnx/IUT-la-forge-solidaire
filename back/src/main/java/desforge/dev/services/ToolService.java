@@ -4,8 +4,8 @@ import desforge.dev.entities.BorrowRequest;
 import desforge.dev.entities.Tool;
 import desforge.dev.entities.User;
 import desforge.dev.enumerations.BorrowRequestState;
-import desforge.dev.errors.borrow_request.BorrowRequestAlreadyExistsException;
 import desforge.dev.errors.borrow.CannotBorrowOwnToolException;
+import desforge.dev.errors.borrow_request.BorrowRequestAlreadyExistsException;
 import desforge.dev.errors.tools.NotAllowedToGetBorrowRequestTool;
 import desforge.dev.errors.tools.ToolAlreadyBorrowedException;
 import desforge.dev.errors.tools.ToolNotExistsException;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -60,7 +59,7 @@ public class ToolService implements IToolService {
         String toolName = fileService.storeFile(image);
 
         Tool tool = new Tool();
-        tool.setImageSrc(imageUrl+toolName);
+        tool.setImageSrc(imageUrl + toolName);
         tool.setDescription(description);
         tool.setName(name);
         tool.setOwner(user);
@@ -108,7 +107,7 @@ public class ToolService implements IToolService {
                     response.setName(tool.getName());
                     response.setDescription(tool.getDescription());
                     response.setImageSrc(tool.getImageSrc());
-                    if(borrowRepository.existsBytoolBorrow(tool)) {
+                    if (borrowRepository.existsBytoolBorrow(tool)) {
                         response.setAvailableAt(borrowRepository.findBytoolBorrow(tool).getDateReturn());
                     } else {
                         response.setAvailableAt(null);
@@ -126,8 +125,8 @@ public class ToolService implements IToolService {
                     return mapToToolResponse(tool, null, authentication == null || !authentication.isAuthenticated());
                 })
                 .toList();
-        if(authentication!= null){
-            User user  = (User) authentication.getPrincipal();
+        if (authentication != null) {
+            User user = (User) authentication.getPrincipal();
             return toolRepository.findByOwnerNot(user)
                     .stream()
                     .map(tool -> {
@@ -135,8 +134,9 @@ public class ToolService implements IToolService {
                     })
                     .toList();
         }
-    return allTools;
+        return allTools;
     }
+
     private ToolResponse mapToToolResponse(Tool tool, Date availableAt, boolean hideAddress) {
         ToolResponse response = new ToolResponse();
         response.setId(tool.getIdTool());
@@ -149,9 +149,9 @@ public class ToolService implements IToolService {
     }
 
     @Override
-    public List<ToolBorrowRequest> getBorrowRequestsByTool(int toolId,User user){
+    public List<ToolBorrowRequest> getBorrowRequestsByTool(int toolId, User user) {
         Tool tool = toolRepository.findById(toolId).orElseThrow(() -> new ToolNotExistsException("Tool not found"));
-        if(!tool.getOwner().getIdUser().equals(user.getIdUser())) {
+        if (!tool.getOwner().getIdUser().equals(user.getIdUser())) {
             throw new NotAllowedToGetBorrowRequestTool("User not allowed to get borrow requests for this tool");
         }
         List<BorrowRequest> borrowRequests = borrowRequestRepository.findBytoolBorrowRequestAndState(toolRepository.findById(toolId).orElseThrow(() -> new ToolNotExistsException("Tool not found")), BorrowRequestState.PENDING);

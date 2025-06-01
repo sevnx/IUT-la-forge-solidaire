@@ -1,4 +1,3 @@
-
 package desforge.dev.entities;
 
 import jakarta.persistence.*;
@@ -7,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="tools")
+@Table(name = "tools")
 public class Tool {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +25,7 @@ public class Tool {
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_TOOL_OWNER"))
     private User owner;
 
-    @OneToMany(mappedBy = "idRequest" )
+    @OneToMany(mappedBy = "idRequest")
     @Column(nullable = false)
     private List<BorrowRequest> borrowRequests;
 
@@ -38,7 +37,7 @@ public class Tool {
     }
 
     public Tool(String name, String description, String imageSrc, User owner) {
-         this.name = name;
+        this.name = name;
         this.description = description;
         this.imageSrc = imageSrc;
         this.owner = owner;

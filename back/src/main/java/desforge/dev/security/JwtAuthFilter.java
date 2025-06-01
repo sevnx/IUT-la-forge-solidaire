@@ -22,11 +22,9 @@ import java.util.List;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
-    private ITokenService jwtService;
-
-    @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    private ITokenService jwtService;
     @Value("${cookie.name}")
     private String cookieName;
 

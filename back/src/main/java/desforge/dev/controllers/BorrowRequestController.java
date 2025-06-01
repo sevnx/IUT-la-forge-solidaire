@@ -28,6 +28,7 @@ public class BorrowRequestController {
     IBorrowRequestService borrowRequestService;
     @Autowired
     IErrorService errorService;
+
     @PutMapping(value = "/{requestId}", produces = "application/json")
     @PreAuthorize("isAuthenticated()")
     @Operation(
@@ -50,16 +51,16 @@ public class BorrowRequestController {
             }
     )
     public ResponseEntity<?> borrowRequestResponse(@PathVariable("requestId") int requestId, Authentication authentication,
-                                                               @Valid @RequestBody BorrowRequestsStateRequest borrowRequestState) {
-        try{
+                                                   @Valid @RequestBody BorrowRequestsStateRequest borrowRequestState) {
+        try {
             User user = (User) authentication.getPrincipal();
             borrowRequestService.setBorrowRequestStatus(requestId, borrowRequestState.getState(), user);
             return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (BorrowRequestNotFoundException e){
+        } catch (BorrowRequestNotFoundException e) {
             return errorService.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch(NotAllowedStateBorrowRequestException e){
+        } catch (NotAllowedStateBorrowRequestException e) {
             return errorService.buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return errorService.buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
         } catch (BorrowRequestNotPendingException e) {
             return errorService.buildErrorResponse(HttpStatus.CONFLICT, e.getMessage());

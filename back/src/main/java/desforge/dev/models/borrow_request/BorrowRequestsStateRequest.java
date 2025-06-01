@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class BorrowRequestsStateRequest {
     @Schema(
             description = "New state for the borrow request. Only 'ACCEPTED' or 'REFUSED' are allowed.",
-            allowableValues = { "ACCEPTED", "REFUSED" }
+            allowableValues = {"ACCEPTED", "REFUSED"}
     )
     private BorrowRequestState state;
 

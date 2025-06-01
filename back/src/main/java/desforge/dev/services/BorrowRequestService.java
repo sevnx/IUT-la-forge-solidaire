@@ -17,14 +17,14 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class BorrowRequestService implements IBorrowRequestService{
+public class BorrowRequestService implements IBorrowRequestService {
 
     @Autowired
     private BorrowRequestRepository borrowRequestRepository;
     @Autowired
     private BorrowRepository borrowRepository;
 
-    public void setBorrowRequestStatus(int idRequest, BorrowRequestState status,User user) {
+    public void setBorrowRequestStatus(int idRequest, BorrowRequestState status, User user) {
         BorrowRequest borrowRequest = borrowRequestRepository.findByidRequest(idRequest)
                 .orElseThrow(() -> new BorrowRequestNotFoundException("Borrow request not found"));
         if (!borrowRequest.getToolBorrowRequest().getOwner().getIdUser().equals(user.getIdUser())) {
@@ -40,7 +40,7 @@ public class BorrowRequestService implements IBorrowRequestService{
 
         List<BorrowRequest> borrowRequests = borrowRequestRepository.findBytoolBorrowRequest(borrowRequest.getToolBorrowRequest());
         for (BorrowRequest request : borrowRequests) {
-                request.setState(BorrowRequestState.REFUSED);
+            request.setState(BorrowRequestState.REFUSED);
         }
         borrowRequest.setState(status);
         if (borrowRequest.getState() == BorrowRequestState.ACCEPTED) {

@@ -27,6 +27,7 @@ import java.util.List;
 public class SecurityConfig {
     @Autowired
     AuthenticationEntryPoint customEntryPoint;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

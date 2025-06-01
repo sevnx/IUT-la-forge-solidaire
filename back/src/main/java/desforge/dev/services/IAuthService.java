@@ -6,7 +6,7 @@ import desforge.dev.models.auth.RegisterRequest;
 
 public interface IAuthService {
 
-    String login(LoginRequest request) ;
+    String login(LoginRequest request);
 
     String register(RegisterRequest registerRequest) throws RegisterException, IllegalArgumentException;
 }

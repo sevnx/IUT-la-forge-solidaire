@@ -1,23 +1,21 @@
 package desforge.dev.services;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.Objects;
-
-import javax.crypto.SecretKey;
-
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.Objects;
 
 @Component
-public class JwtService implements ITokenService{
+public class JwtService implements ITokenService {
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -26,6 +24,7 @@ public class JwtService implements ITokenService{
     private int jwtExpirationMs;
 
     private SecretKey secretKey;
+
     @PostConstruct
     public void init() {
         this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
@@ -64,7 +63,7 @@ public class JwtService implements ITokenService{
         try {
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }

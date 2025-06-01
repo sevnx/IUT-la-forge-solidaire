@@ -6,8 +6,8 @@ import desforge.dev.errors.borrow_request.BorrowRequestAlreadyExistsException;
 import desforge.dev.errors.tools.NotAllowedToGetBorrowRequestTool;
 import desforge.dev.errors.tools.ToolAlreadyBorrowedException;
 import desforge.dev.errors.tools.ToolNotExistsException;
-import desforge.dev.models.error.ErrorResponse;
 import desforge.dev.models.borrow_request.CreateBorrowRequest;
+import desforge.dev.models.error.ErrorResponse;
 import desforge.dev.models.tools.wrapper.ToolResponseWrapper;
 import desforge.dev.services.IErrorService;
 import desforge.dev.services.IToolService;
@@ -98,14 +98,14 @@ public class ToolsController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    public ResponseEntity<?> createTool( Authentication auth,
-                                         @RequestParam String name,
-                                         @RequestParam String description,
-                                         @RequestParam MultipartFile image
+    public ResponseEntity<?> createTool(Authentication auth,
+                                        @RequestParam String name,
+                                        @RequestParam String description,
+                                        @RequestParam MultipartFile image
     ) {
         try {
             User user = (User) auth.getPrincipal();
-            toolsService.createTool( user, name, description, image);
+            toolsService.createTool(user, name, description, image);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (IllegalArgumentException e) {
             return errorService.buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -126,14 +126,12 @@ public class ToolsController {
             }
     )
     public ResponseEntity<?> getBorrowRequest(@PathVariable("toolId") int toolId, Authentication auth) {
-        try{
+        try {
             User user = (User) auth.getPrincipal();
             return ResponseEntity.ok(Map.of("data", toolsService.getBorrowRequestsByTool(toolId, user)));
-        }
-        catch (ToolNotExistsException e) {
+        } catch (ToolNotExistsException e) {
             return errorService.buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-        catch (NotAllowedToGetBorrowRequestTool e){
+        } catch (NotAllowedToGetBorrowRequestTool e) {
             return errorService.buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
