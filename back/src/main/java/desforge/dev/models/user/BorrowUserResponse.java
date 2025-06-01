@@ -7,6 +7,7 @@ public class BorrowUserResponse {
     private String description;
     private String imageSrc;
     private Date dateReturn;
+    private Date dateRequest;
 
     public String getName() {
         return name;
@@ -40,5 +41,11 @@ public class BorrowUserResponse {
         this.dateReturn = dateReturn;
     }
 
+    public Date getDateRequest() {
+        return dateRequest;
+    }
 
+    public void setDateRequest(Date dateRequest) {
+        this.dateRequest = dateRequest;
+    }
 }
