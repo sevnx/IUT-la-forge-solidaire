@@ -7,7 +7,7 @@ export interface ToolListProps {
 
 export function ToolList({ tools }: ToolListProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 w-full">
       {tools.map((tool) => (
         <ToolCard key={tool.id} tool={tool} />
       ))}

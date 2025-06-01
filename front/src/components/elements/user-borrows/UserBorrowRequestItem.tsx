@@ -1,29 +1,33 @@
-import type { ToolBorrowRequest } from '@/api/tools/borrows';
+import type { UserBorrowRequest } from '@/api/tools/borrows';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { FormattedDate } from '@/components/core/FormattedDate';
 
 export interface UserBorrowRequestItemProps {
-  request: ToolBorrowRequest;
+  request: UserBorrowRequest;
 }
 
 export function UserBorrowRequestItem({ request }: UserBorrowRequestItemProps) {
   return (
     <Card className="overflow-hidden shadow-md transition-all hover:shadow-lg">
       <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <p className="font-medium">Demande d'emprunt</p>
-            <p className="text-sm text-muted-foreground">
-              Date de retour souhaitée : <FormattedDate isoDate={request.returnDate} />
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Demande faite le : <FormattedDate isoDate={request.requestDate} />
-            </p>
+        <div className="flex items-center gap-6">
+          <img 
+            src={request.imageSrc} 
+            alt={request.name}
+            className="w-16 h-16 object-cover rounded-md"
+          />
+          <div className="flex flex-1 items-center justify-between">
+            <div className="space-y-1">
+              <p className="font-medium">{request.name}</p>
+              <p className="text-sm text-muted-foreground">{request.description}</p>
+            </div>
+            <Badge
+              variant="secondary"
+              className="gap-2 px-4 py-2 text-base flex items-center bg-blue-50 text-blue-700"
+            >
+              En attente
+            </Badge>
           </div>
-          <Badge variant="secondary" className="bg-blue-50 text-blue-700">
-            En attente
-          </Badge>
         </div>
       </CardContent>
     </Card>

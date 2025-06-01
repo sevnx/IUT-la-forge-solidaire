@@ -25,9 +25,11 @@ function RouteComponent() {
   return (
     <>
       {state === AuthState.LoggedIn ? <UserNav /> : <GuestNav />}
-      <div className="flex flex-grow flex-col items-center px-50 bg-gradient-to-br from-slate-50 to-slate-100">
-        <ToolSearchBar onSearch={() => {}} />
-        <ToolList tools={tools ?? []} />
+      <div className="flex flex-grow flex-col items-center bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="mx-auto w-full max-w-6xl flex flex-col items-center">
+          <ToolSearchBar onSearch={() => {}} />
+          <ToolList tools={tools ?? []} />
+        </div>
       </div>
     </>
   );

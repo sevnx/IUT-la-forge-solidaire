@@ -40,10 +40,13 @@ export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) 
       <DialogTrigger asChild>
         <Button variant="outline">...</Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-6xl">
         <DialogHeader>
           <DialogTitle>Demandes d'emprunt</DialogTitle>
           <DialogDescription>Gérez les demandes d'emprunt pour votre outil</DialogDescription>
+        </DialogHeader>
+        
+        <div className="mt-6 space-y-6">
           {toolRequests && toolRequests.length > 0 ? (
             toolRequests.map((request) => (
               <UserToolRequestCard
@@ -67,9 +70,11 @@ export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) 
               />
             ))
           ) : (
-            <p className="text-center text-muted-foreground py-4">Pas de demande en cours</p>
+            <div className="flex flex-col items-center justify-center py-12">
+              <p className="text-center text-muted-foreground text-lg">Pas de demande en cours</p>
+            </div>
           )}
-        </DialogHeader>
+        </div>
       </DialogContent>
     </Dialog>
   );
