@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -119,26 +120,32 @@ public class ToolService implements IToolService {
 
     @Override
     public List<ToolResponse> getAllTools(Authentication authentication) {
-        // Implementation logic to retrieve all tools
-        return toolRepository.findAll()
+        List<ToolResponse> allTools = toolRepository.findAll()
                 .stream()
                 .map(tool -> {
-                    ToolResponse response = new ToolResponse();
-                    response.setId(tool.getIdTool());
-                    response.setName(tool.getName());
-                    response.setDescription(tool.getDescription());
-                    response.setImageSrc(tool.getImageSrc());
-
-                    if (borrowRepository.findBytoolBorrow(tool) != null) {
-                        response.setAvailableAt(borrowRepository.findBytoolBorrow(tool).getDateReturn());
-                    }
-                    if(authentication != null) {
-                        response.setAddress(tool.getOwner().getAddress());
-                    }
-
-                    return response;
+                    return mapToToolResponse(tool, null, authentication == null || !authentication.isAuthenticated());
                 })
                 .toList();
+        if(authentication!= null){
+            User user  = (User) authentication.getPrincipal();
+            return toolRepository.findByOwnerNot(user)
+                    .stream()
+                    .map(tool -> {
+                        return mapToToolResponse(tool, borrowRepository.existsBytoolBorrow(tool) ? borrowRepository.findBytoolBorrow(tool).getDateReturn() : null, authentication == null || !authentication.isAuthenticated());
+                    })
+                    .toList();
+        }
+    return allTools;
+    }
+    private ToolResponse mapToToolResponse(Tool tool, Date availableAt, boolean hideAddress) {
+        ToolResponse response = new ToolResponse();
+        response.setId(tool.getIdTool());
+        response.setName(tool.getName());
+        response.setDescription(tool.getDescription());
+        response.setImageSrc(tool.getImageSrc());
+        response.setAvailableAt(availableAt);
+        response.setAddress(hideAddress ? null : tool.getOwner().getAddress());
+        return response;
     }
 
     @Override
