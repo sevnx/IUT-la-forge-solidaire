@@ -50,8 +50,8 @@ export function LandingAbout() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-orange-500 rounded-3xl transform rotate-3"></div>
             <img
-              src="https://img.freepik.com/free-photo/closeup-shot-business-handshake-cropped-shot-two-people-wearing-formal-suits-shaking-hands-business-handshake-concept_1262-21017.jpg?semt=ais_hybrid&w=740"
-              alt="Communauté partageant des outils"
+              src="/assets/community-tools-sharing.jpg"
+              alt="Personnes partageant des outils dans une communauté locale"
               width={600}
               height={500}
               className="relative z-10 w-full rounded-3xl shadow-2xl object-cover"

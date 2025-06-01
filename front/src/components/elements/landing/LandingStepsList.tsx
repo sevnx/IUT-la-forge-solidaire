@@ -26,9 +26,9 @@ export function StepsList({ steps }: StepsListProps) {
   );
 }
 
-function StepItem({ step, key }: StepItemProps) {
-  return (
-    <div key={key} className="flex items-start space-x-4 group">
+function StepItem({ step }: StepItemProps) {
+   return (
+    <div className="flex items-start space-x-4 group">
       <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
         <step.icon className="h-6 w-6 text-white" />
       </div>

@@ -158,7 +158,7 @@ function RouteComponent() {
           )}
         />
         <Button type="submit" className="w-full mt-4" disabled={form.formState.isSubmitting}>
-          Register
+          S'inscrire
         </Button>
         {error && <p className="font-medium text-sm text-red-500 mt-2">{error}</p>}
         <p className="text-sm text-muted-foreground mt-8">

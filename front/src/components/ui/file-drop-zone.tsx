@@ -27,7 +27,7 @@ export function FileDropZone({
     }
 
     if (acceptedTypes.length > 0 && !acceptedTypes.includes('*')) {
-      const fileExtension = `.${file.name.split('.').pop()?.toLowerCase()}`;
+      const fileExtension = `.${file.name.split('.').pop()?.toLowerCase() || ''}`;
       const mimeType = file.type;
 
       const isValidType = acceptedTypes.some(

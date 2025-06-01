@@ -95,7 +95,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
                 lang="fr"
               />
             </div>
-            <Button onClick={handleBorrowRequest} className="w-full rounded-t-none">
+            <Button onClick={handleBorrowRequest} className="w-full rounded-t-none" disabled={!returnDate}>
               Confirmer la demande
             </Button>
           </PopoverContent>

@@ -105,10 +105,13 @@ export interface UserBorrowRequest {
   description: string;
   imageSrc: string;
 }
+export enum GetUserBorrowRequestsError {
+  UnexpectedError = 'Unexpected error',
+}
 
-export const getUserBorrowRequests = (): ResultAsync<UserBorrowRequest[], GetUserBorrowsError> => {
+export const getUserBorrowRequests = (): ResultAsync<UserBorrowRequest[], GetUserBorrowRequestsError> => {
   return ResultAsync.fromPromise(api.get('/user/borrow-requests'), () => {
-    return GetUserBorrowsError.UnexpectedError;
+    return GetUserBorrowRequestsError.UnexpectedError;
   }).andThen((response) => {
     return okAsync(response.data.data);
   });

@@ -33,7 +33,7 @@ export function UserTools({ tools }: UserToolsProps) {
         ) : (
           <div className="grid gap-4 md:gap-6">
             {tools.map((tool) => (
-              <UserToolItem tool={tool} />
+              <UserToolItem key={tool.id} tool={tool} />
             ))}
           </div>
         )}
