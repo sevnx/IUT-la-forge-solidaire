@@ -3,17 +3,17 @@ package desforge.dev.models.user;
 import java.util.Date;
 
 public class BorrowUserResponse {
-    private String toolName;
+    private String name;
     private String description;
     private String imageSrc;
     private Date dateReturn;
 
-    public String getToolName() {
-        return toolName;
+    public String getName() {
+        return name;
     }
 
-    public void setToolName(String toolName) {
-        this.toolName = toolName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

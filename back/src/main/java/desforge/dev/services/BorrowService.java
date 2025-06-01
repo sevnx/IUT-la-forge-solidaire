@@ -18,7 +18,7 @@ public class BorrowService implements IBorrowService {
                 .stream()
                 .map(borrow -> {
                     BorrowUserResponse response = new BorrowUserResponse();
-                    response.setToolName(borrow.getToolBorrow().getName());
+                    response.setName(borrow.getToolBorrow().getName());
                     response.setDescription(borrow.getToolBorrow().getDescription());
                     response.setImageSrc(borrow.getToolBorrow().getImageSrc());
                     response.setDateReturn(borrow.getDateReturn());

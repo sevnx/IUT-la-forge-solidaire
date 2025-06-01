@@ -3,7 +3,7 @@ package desforge.dev.models.tools;
 import java.util.Date;
 
 public class ToolBorrowRequest {
-    private int requestId;
+    private int id;
 
     private String username;
 
@@ -11,12 +11,12 @@ public class ToolBorrowRequest {
 
     private Date returnDate;
 
-    public int getRequestId() {
-        return requestId;
+    public int getId() {
+        return id;
     }
 
-    public void setRequestId(int requestId) {
-        this.requestId = requestId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {

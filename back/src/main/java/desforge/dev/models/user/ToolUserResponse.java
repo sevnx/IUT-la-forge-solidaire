@@ -4,27 +4,27 @@ import java.util.Date;
 import java.util.Optional;
 
 public class ToolUserResponse {
-    private int toolNumber;
-    private String toolName;
+    private int id;
+    private String name;
     private String description;
     private String imageSrc;
 
     private Date availableAt;
 
-    public int getToolNumber() {
-        return toolNumber;
+    public int getId() {
+        return id;
     }
 
-    public void setToolNumber(int toolNumber) {
-        this.toolNumber = toolNumber;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getToolName() {
-        return toolName;
+    public String getName() {
+        return name;
     }
 
-    public void setToolName(String toolName) {
-        this.toolName = toolName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
