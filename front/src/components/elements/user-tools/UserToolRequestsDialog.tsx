@@ -45,7 +45,7 @@ export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) 
           <DialogTitle>Demandes d'emprunt</DialogTitle>
           <DialogDescription>Gérez les demandes d'emprunt pour votre outil</DialogDescription>
         </DialogHeader>
-        
+
         <div className="mt-6 space-y-6">
           {toolRequests && toolRequests.length > 0 ? (
             toolRequests.map((request) => (

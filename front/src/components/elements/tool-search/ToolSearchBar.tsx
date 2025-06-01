@@ -26,7 +26,8 @@ export function ToolSearchBar({ onSearch }: ToolSearchBarProps) {
           className="flex-grow"
         />
         <Button type="submit" aria-label="Search">
-          <Search className="h-4 w-4 mr-1" />Rechercher
+          <Search className="h-4 w-4 mr-1" />
+          Rechercher
         </Button>
       </form>
     </div>
