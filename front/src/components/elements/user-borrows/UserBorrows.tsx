@@ -11,6 +11,7 @@ interface UserBorrowsProps {
 
 export function UserBorrows({ borrows, requests }: UserBorrowsProps) {
   const [activeTab, setActiveTab] = useState<'borrows' | 'requests'>('borrows');
+  const sortedBorrows = borrows.sort((a, b) => new Date(b.dateRequest).getTime() - new Date(a.dateRequest).getTime());
 
   return (
     <div className="flex flex-grow flex-col items-center bg-gradient-to-br from-slate-50 to-slate-100 p-6 md:p-12">
@@ -39,7 +40,7 @@ export function UserBorrows({ borrows, requests }: UserBorrowsProps) {
         <div className="space-y-4">
           {activeTab === 'borrows' ? (
             borrows.length > 0 ? (
-              borrows.map((borrow, i) => <UserBorrowItem key={i} borrow={borrow} />)
+              sortedBorrows.map((borrow, i) => <UserBorrowItem key={i} borrow={borrow} />)
             ) : (
               <UserBorrowsEmpty type="borrows" />
             )
