@@ -20,7 +20,7 @@ export interface UserToolRequestsDialogProps {
 export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) {
   const queryClient = useQueryClient();
   const { data: toolRequests } = useQuery({
-    queryKey: ['toolRequests', toolId],
+    queryKey: ['tool-requests', toolId],
     queryFn: async () => {
       const result = await getToolBorrowRequests(toolId);
       if (result.isErr()) {
@@ -59,12 +59,12 @@ export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) 
                   } else {
                     if (decision === 'ACCEPTED') {
                       toast.success("Demande d'emprunt acceptée avec succès");
-                      queryClient.invalidateQueries({ queryKey: ['userTools'] });
+                      queryClient.invalidateQueries({ queryKey: ['user-tools'] });
                       setIsOpen(false);
                     } else {
                       toast.success("Demande d'emprunt refusée avec succès");
                     }
-                    queryClient.invalidateQueries({ queryKey: ['toolRequests', toolId] });
+                    queryClient.invalidateQueries({ queryKey: ['tool-requests', toolId] });
                   }
                 }}
               />
