@@ -11,7 +11,7 @@ export const Route = createFileRoute('/user/tools')({
 
 function RouteComponent() {
   const { data: tools } = useQuery({
-    queryKey: ['userTools'],
+    queryKey: ['user-tools'],
     queryFn: neverthrowToError(getUserTools),
   });
 
