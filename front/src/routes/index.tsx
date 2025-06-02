@@ -2,6 +2,7 @@ import { AuthState, useAuth } from '@/context/AuthContext';
 import { createFileRoute } from '@tanstack/react-router';
 import { DashboardComponent } from './-dashboard';
 import { LandingComponent } from './-landing';
+import { EmptyPage } from '@/components/core/EmptyPage';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -15,6 +16,6 @@ function Index() {
   } else if (state === AuthState.LoggedOut) {
     return <LandingComponent />;
   } else {
-    return null;
+    return <EmptyPage />;
   }
 }

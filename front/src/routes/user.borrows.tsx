@@ -3,6 +3,7 @@ import { UserBorrows } from '@/components/elements/user-borrows/UserBorrows';
 import { getUserBorrowRequests, getUserBorrows } from '@/api/tools/borrows';
 import { neverthrowToError } from '@/lib/neverthrow';
 import { useQuery } from '@tanstack/react-query';
+import { EmptyPage } from '@/components/core/EmptyPage';
 
 export const Route = createFileRoute('/user/borrows')({
   component: RouteComponent,
@@ -20,7 +21,7 @@ function RouteComponent() {
   });
 
   if (borrows === undefined) {
-    return <div>Loading...</div>;
+    return <EmptyPage />;
   }
 
   return <UserBorrows borrows={borrows ?? []} requests={requests ?? []} />;
