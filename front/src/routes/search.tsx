@@ -1,3 +1,4 @@
+import { EmptyPage } from '@/components/core/EmptyPage';
 import { ToolSearch } from '@/components/elements/tool-search/ToolSearch';
 import GuestNav from '@/components/navbars/GuestNav';
 import UserNav from '@/components/navbars/UserNav';
@@ -12,7 +13,7 @@ function RouteComponent() {
   const { state } = useAuth();
 
   if (state === AuthState.Loading) {
-    return null;
+    return <EmptyPage />;
   }
   return (
     <>

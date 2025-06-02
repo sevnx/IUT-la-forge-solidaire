@@ -1,6 +1,7 @@
 import type { FileRoutesByFullPath } from '@/routeTree.gen';
 import { AuthState, useAuth } from './AuthContext';
 import { Navigate } from '@tanstack/react-router';
+import { EmptyPage } from '@/components/core/EmptyPage';
 
 interface AuthRedirectorProps {
   children: React.ReactNode;
@@ -12,7 +13,7 @@ export const AuthRedirector = ({ children, expectedState, fallbackRoute }: AuthR
   const { state } = useAuth();
 
   if (state === AuthState.Loading) {
-    return null;
+    return <EmptyPage />;
   }
 
   if (state === expectedState) {

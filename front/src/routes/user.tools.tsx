@@ -1,4 +1,5 @@
 import { getUserTools } from '@/api/tools/tools';
+import { EmptyPage } from '@/components/core/EmptyPage';
 import { UserTools } from '@/components/elements/user-tools/UserTools';
 import { neverthrowToError } from '@/lib/neverthrow';
 import { useQuery } from '@tanstack/react-query';
@@ -15,7 +16,7 @@ function RouteComponent() {
   });
 
   if (tools === undefined) {
-    return <div>Loading...</div>;
+    return <EmptyPage />;
   }
 
   return <UserTools tools={tools ?? []} />;
