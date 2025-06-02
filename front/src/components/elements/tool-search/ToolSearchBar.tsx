@@ -10,7 +10,7 @@ export function ToolSearchBar({ onSearch }: ToolSearchBarProps) {
   };
 
   return (
-    <div className="mt-10 mb-10 w-full">
+    <div className="mt-10 mb-10 w-full bg-white rounded-lg shadow-sm">
       <Input
         type="text"
         placeholder="Chercher un outil"

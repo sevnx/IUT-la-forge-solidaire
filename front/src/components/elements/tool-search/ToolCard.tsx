@@ -35,7 +35,9 @@ export function ToolCard({ tool, className }: ToolCardProps) {
     });
 
     if (result.isErr()) {
-      toast.error("Erreur lors de la demande d'emprunt", { style: { fontSize: '1rem', padding: '1.25rem 2.5rem' } });
+      toast.error("Vous avez déjà une demande d'emprunt en attente", {
+        style: { fontSize: '1rem', padding: '1.25rem 2.5rem' },
+      });
     } else {
       toast.success(
         `Demande d'emprunt envoyée pour le ${returnDate.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}`,

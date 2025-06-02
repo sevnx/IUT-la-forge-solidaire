@@ -32,13 +32,26 @@ export function UserToolRequestsDialog({ toolId }: UserToolRequestsDialogProps) 
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpenChange = (open: boolean) => {
+    if (open) {
+      queryClient.invalidateQueries({ queryKey: ['tool-requests', toolId] });
+    }
     setIsOpen(open);
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline">...</Button>
+        <Button 
+          variant="outline" 
+          className={toolRequests && toolRequests.length > 0 ? "relative" : ""}
+        >
+          ...
+          {toolRequests && toolRequests.length > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              {toolRequests.length}
+            </span>
+          )}
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-6xl">
         <DialogHeader>
