@@ -88,7 +88,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
                   <TooltipContent>Connectez-vous pour emprunter</TooltipContent>
                 </Tooltip>
               ) : (
-                "Emprunter"
+                'Emprunter'
               )}
             </Button>
           </PopoverTrigger>
