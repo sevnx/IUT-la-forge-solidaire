@@ -82,8 +82,8 @@ public class ToolService implements IToolService {
         if (user.getIdUser().equals(tool.getOwner().getIdUser())) {
             throw new CannotBorrowOwnToolException("User not allowed to borrow own tool");
         }
-
-        if (borrowRepository.findByToolBorrowAndDateBorrowAfter(tool, new Date()) != null) {
+        Borrow borrow = borrowRepository.findBytoolBorrow(tool);
+        if ((borrow != null && borrow.getDateReturn() != null && borrow.getDateReturn().after(new Date()))) {
             throw new ToolAlreadyBorrowedException("This tool has already been borrowed");
         }
         BorrowRequest borrowRequest = new BorrowRequest();
@@ -106,9 +106,15 @@ public class ToolService implements IToolService {
                     response.setName(tool.getName());
                     response.setDescription(tool.getDescription());
                     response.setImageSrc(tool.getImageSrc());
-                    Borrow borrow = borrowRepository.findByToolBorrowAndDateBorrowAfter(tool, new Date());
-                    if (borrow != null) {
-                        response.setAvailableAt(borrow.getDateReturn());
+                    List<Borrow> borrow = borrowRepository.findByToolBorrow(tool);
+                    Borrow t = new Borrow();
+                    for (Borrow b : borrow) {
+                        if (b.getDateReturn() != null && b.getDateReturn().after(new Date())) {
+                            t = b;
+                        }
+                    }
+                    if (t != null) {
+                        response.setAvailableAt(t.getDateReturn());
                     } else {
                         response.setAvailableAt(null);
                     }
@@ -130,7 +136,14 @@ public class ToolService implements IToolService {
             return toolRepository.findByOwnerNot(user)
                     .stream()
                     .map(tool -> {
-                        return mapToToolResponse(tool, borrowRepository.findByToolBorrowAndDateBorrowAfter(tool, new Date()) != null ? borrowRepository.findBytoolBorrow(tool).getDateReturn() : null, authentication == null || !authentication.isAuthenticated());
+                        List<Borrow> borrow = borrowRepository.findByToolBorrow(tool);
+                        Borrow t = new Borrow();
+                        for (Borrow b : borrow) {
+                            if (b.getDateReturn() != null && b.getDateReturn().after(new Date())) {
+                                t = b;
+                            }
+                        }
+                        return mapToToolResponse(tool, (t != null) ? t.getDateReturn() : null, authentication == null || !authentication.isAuthenticated());
                     })
                     .toList();
         }

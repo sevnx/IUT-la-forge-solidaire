@@ -15,5 +15,5 @@ public interface BorrowRepository extends JpaRepository<Borrow, Integer> {
 
     Borrow findBytoolBorrow(Tool toolBorrow);
 
-    Borrow findByToolBorrowAndDateBorrowAfter(Tool toolBorrow, Date dateBorrow);
+    List<Borrow> findByToolBorrow(Tool toolBorrow);
 }
