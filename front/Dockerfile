@@ -2,7 +2,7 @@
 FROM node:latest AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm install --force
 COPY . .
 RUN npm run build
 

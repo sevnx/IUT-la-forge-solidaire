@@ -4,9 +4,7 @@ services:
       context: ./front
       dockerfile: Dockerfile
     ports:
-      - "80:80"
-    depends_on:
-      - backend
+      - "5173:80"
     networks:
       - bricolage-network
     profiles:
@@ -22,7 +20,6 @@ services:
       - bricolage-network
     profiles:
       - backend
-      - frontend
 
   db:
     image: mysql:8.0
