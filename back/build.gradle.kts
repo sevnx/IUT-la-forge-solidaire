@@ -32,6 +32,14 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
 
+    // Integration test dependencies
+    testImplementation("org.testcontainers:testcontainers:1.20.4")
+    testImplementation("org.testcontainers:junit-jupiter:1.20.4")
+    testImplementation("org.testcontainers:mysql:1.20.4")
+    testImplementation("com.squareup.okhttp3:okhttp:4.12.0")
+    testImplementation("com.squareup.okhttp3:okhttp-urlconnection:4.12.0")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind:2.18.2")
+    testRuntimeOnly("com.h2database:h2")
 }
 
 tasks.withType<Test> {
