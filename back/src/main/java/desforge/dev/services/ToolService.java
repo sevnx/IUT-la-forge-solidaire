@@ -82,8 +82,15 @@ public class ToolService implements IToolService {
         if (user.getIdUser().equals(tool.getOwner().getIdUser())) {
             throw new CannotBorrowOwnToolException("User not allowed to borrow own tool");
         }
-        Borrow borrow = borrowRepository.findBytoolBorrow(tool);
-        if ((borrow != null && borrow.getDateReturn() != null && borrow.getDateReturn().after(new Date()))) {
+        List<Borrow> borrow = borrowRepository.findByToolBorrow(tool);
+        Borrow t = new Borrow();
+        for (Borrow b : borrow) {
+            if (b.getDateReturn() != null && b.getDateReturn().after(new Date())) {
+                t = b;
+            }
+        }
+        System.out.println("Tool: " + tool.getName() + ", Borrow: " + t.getDateReturn());
+        if (t.getDateReturn() != null ) {
             throw new ToolAlreadyBorrowedException("This tool has already been borrowed");
         }
         BorrowRequest borrowRequest = new BorrowRequest();
