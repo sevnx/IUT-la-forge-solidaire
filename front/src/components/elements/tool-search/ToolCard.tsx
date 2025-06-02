@@ -13,6 +13,7 @@ import { createToolBorrow } from '@/api/tools/borrows';
 import { toast } from 'sonner';
 import { AuthState, useAuth } from '@/context/AuthContext';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { isDateBeforeToday } from '@/lib/date';
 
 export interface ToolCardProps {
   tool: Tool;
@@ -21,7 +22,7 @@ export interface ToolCardProps {
 
 export function ToolCard({ tool, className }: ToolCardProps) {
   const { state } = useAuth();
-  const available = tool.availableAt ? false : true;
+  const available = tool.availableAt ? isDateBeforeToday(tool.availableAt) : true;
   const [returnDate, setReturnDate] = useState<Date | undefined>(undefined);
   const [open, setOpen] = useState(false);
 

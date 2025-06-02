@@ -4,12 +4,15 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { CheckCircle, Clock } from 'lucide-react';
 import { UserToolRequestsDialog } from './UserToolRequestsDialog';
+import { isDateBeforeToday } from '@/lib/date';
 
 export interface UserToolItemProps {
   tool: Tool;
 }
 
 export function UserToolItem({ tool }: UserToolItemProps) {
+  const available = tool.availableAt ? isDateBeforeToday(tool.availableAt) : true;
+
   return (
     <Card key={tool.id} className="overflow-hidden shadow-md transition-all hover:shadow-lg">
       <CardContent className="p-0">
@@ -26,7 +29,7 @@ export function UserToolItem({ tool }: UserToolItemProps) {
 
           {/* Status */}
           <div className="flex items-center">
-            {tool.availableAt === null ? (
+            {available ? (
               <div className="flex items-center gap-2">
                 <Badge variant="secondary" className="gap-2 bg-green-50 text-green-700 text-sm py-1.5 px-3">
                   <CheckCircle className="h-4 w-4" />
