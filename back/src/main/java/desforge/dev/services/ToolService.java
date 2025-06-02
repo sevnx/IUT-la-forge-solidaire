@@ -23,8 +23,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ToolService implements IToolService {
@@ -82,16 +84,9 @@ public class ToolService implements IToolService {
         if (user.getIdUser().equals(tool.getOwner().getIdUser())) {
             throw new CannotBorrowOwnToolException("User not allowed to borrow own tool");
         }
-        List<Borrow> borrow = borrowRepository.findByToolBorrow(tool);
-        Borrow t = new Borrow();
-        for (Borrow b : borrow) {
-            if (b.getDateReturn() != null && b.getDateReturn().after(new Date())) {
-                t = b;
-            }
-        }
-        System.out.println("Tool: " + tool.getName() + ", Borrow: " + t.getDateReturn());
-        if (t.getDateReturn() != null ) {
-            throw new ToolAlreadyBorrowedException("This tool has already been borrowed");
+        Optional<Borrow> latestBorrow = getLatestBorrow(tool);
+        if (latestBorrow.isPresent() && !latestBorrow.get().getDateReturn().before(new Date())) {
+            throw new ToolAlreadyBorrowedException("This tool is currently borrowed and not available");
         }
         BorrowRequest borrowRequest = new BorrowRequest();
         borrowRequest.setRequestDate(new Date());
@@ -104,7 +99,6 @@ public class ToolService implements IToolService {
 
     @Override
     public List<UserTool> getUserTools(User user) {
-        // Implementation logic to retrieve tools for the user
         return toolRepository.findByOwner(user)
                 .stream()
                 .map(tool -> {
@@ -113,15 +107,9 @@ public class ToolService implements IToolService {
                     response.setName(tool.getName());
                     response.setDescription(tool.getDescription());
                     response.setImageSrc(tool.getImageSrc());
-                    List<Borrow> borrow = borrowRepository.findByToolBorrow(tool);
-                    Borrow t = new Borrow();
-                    for (Borrow b : borrow) {
-                        if (b.getDateReturn() != null && b.getDateReturn().after(new Date())) {
-                            t = b;
-                        }
-                    }
-                    if (t != null) {
-                        response.setAvailableAt(t.getDateReturn());
+                    Optional<Borrow> latestBorrow = getLatestBorrow(tool);
+                    if (latestBorrow.isPresent() && !latestBorrow.get().getDateReturn().before(new Date())) {
+                        response.setAvailableAt(latestBorrow.get().getDateReturn());
                     } else {
                         response.setAvailableAt(null);
                     }
@@ -130,12 +118,24 @@ public class ToolService implements IToolService {
                 .toList();
     }
 
+    private Optional<Borrow> getLatestBorrow(desforge.dev.entities.Tool tool) {
+        return borrowRepository.findByToolBorrow(tool)
+                .stream()
+                .filter(borrow -> borrow.getDateReturn() != null)
+                .max(Comparator.comparing(Borrow::getDateReturn));
+    }
+
     @Override
     public List<Tool> getAllTools(Authentication authentication) {
         List<Tool> allTools = toolRepository.findAll()
                 .stream()
                 .map(tool -> {
-                    return mapToToolResponse(tool, null, authentication == null || !authentication.isAuthenticated());
+                    Optional<Borrow> latestBorrow = getLatestBorrow(tool);
+                    Date availableAt = null;
+                    if (latestBorrow.isPresent() && !latestBorrow.get().getDateReturn().before(new Date())) {
+                        availableAt = latestBorrow.get().getDateReturn();
+                    }
+                    return mapToToolResponse(tool, availableAt, authentication == null || !authentication.isAuthenticated());
                 })
                 .toList();
         if (authentication != null) {
@@ -143,14 +143,14 @@ public class ToolService implements IToolService {
             return toolRepository.findByOwnerNot(user)
                     .stream()
                     .map(tool -> {
-                        List<Borrow> borrow = borrowRepository.findByToolBorrow(tool);
-                        Borrow t = new Borrow();
-                        for (Borrow b : borrow) {
-                            if (b.getDateReturn() != null && b.getDateReturn().after(new Date())) {
-                                t = b;
+                        Optional<Borrow> latestBorrow = getLatestBorrow(tool);
+                        Date availableAt = null;
+                        if (latestBorrow.isPresent()) {
+                            if (!latestBorrow.get().getDateReturn().before(new Date())) {
+                                availableAt = latestBorrow.get().getDateReturn();
                             }
                         }
-                        return mapToToolResponse(tool, (t != null) ? t.getDateReturn() : null, authentication == null || !authentication.isAuthenticated());
+                        return mapToToolResponse(tool, availableAt, authentication == null || !authentication.isAuthenticated());
                     })
                     .toList();
         }
