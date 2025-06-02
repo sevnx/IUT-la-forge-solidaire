@@ -25,7 +25,7 @@ export function UserBorrowItem({ borrow }: UserBorrowItemProps) {
             <div className="space-y-1">
               <p className="font-medium">{borrow.name}</p>
               <p className="text-sm text-muted-foreground">
-                Date de retour : <FormattedDate isoDate={borrow.dateReturn} />
+                <FormattedDate isoDate={borrow.dateRequest} /> - <FormattedDate isoDate={borrow.dateReturn} />
               </p>
             </div>
             <Badge
