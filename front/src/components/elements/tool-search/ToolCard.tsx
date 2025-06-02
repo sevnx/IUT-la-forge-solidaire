@@ -12,7 +12,6 @@ import { useState } from 'react';
 import { createToolBorrow } from '@/api/tools/borrows';
 import { toast } from 'sonner';
 import { AuthState, useAuth } from '@/context/AuthContext';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { isDateBeforeToday } from '@/lib/date';
 
 export interface ToolCardProps {
@@ -82,14 +81,7 @@ export function ToolCard({ tool, className }: ToolCardProps) {
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button className="w-full" disabled={!available || state !== AuthState.LoggedIn}>
-              {state === AuthState.LoggedOut ? (
-                <Tooltip>
-                  <TooltipTrigger>Emprunter</TooltipTrigger>
-                  <TooltipContent>Connectez-vous pour emprunter</TooltipContent>
-                </Tooltip>
-              ) : (
-                'Emprunter'
-              )}
+              Emprunter
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
