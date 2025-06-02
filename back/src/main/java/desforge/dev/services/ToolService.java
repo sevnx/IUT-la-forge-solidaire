@@ -1,5 +1,6 @@
 package desforge.dev.services;
 
+import desforge.dev.entities.Borrow;
 import desforge.dev.entities.BorrowRequest;
 import desforge.dev.entities.User;
 import desforge.dev.enumerations.BorrowRequestState;
@@ -82,8 +83,7 @@ public class ToolService implements IToolService {
             throw new CannotBorrowOwnToolException("User not allowed to borrow own tool");
         }
 
-        if (borrowRepository.findBytoolBorrow(tool) != null &&
-                borrowRepository.findBytoolBorrow(tool).getDateReturn().after(new Date())) {
+        if (borrowRepository.findByToolBorrowAndDateBorrowAfter(tool, new Date()) != null) {
             throw new ToolAlreadyBorrowedException("This tool has already been borrowed");
         }
         BorrowRequest borrowRequest = new BorrowRequest();
@@ -106,8 +106,9 @@ public class ToolService implements IToolService {
                     response.setName(tool.getName());
                     response.setDescription(tool.getDescription());
                     response.setImageSrc(tool.getImageSrc());
-                    if (borrowRepository.existsByToolBorrow(tool)) {
-                        response.setAvailableAt(borrowRepository.findBytoolBorrow(tool).getDateReturn());
+                    Borrow borrow = borrowRepository.findByToolBorrowAndDateBorrowAfter(tool, new Date());
+                    if (borrow != null) {
+                        response.setAvailableAt(borrow.getDateReturn());
                     } else {
                         response.setAvailableAt(null);
                     }
@@ -129,7 +130,7 @@ public class ToolService implements IToolService {
             return toolRepository.findByOwnerNot(user)
                     .stream()
                     .map(tool -> {
-                        return mapToToolResponse(tool, borrowRepository.existsByToolBorrow(tool) ? borrowRepository.findBytoolBorrow(tool).getDateReturn() : null, authentication == null || !authentication.isAuthenticated());
+                        return mapToToolResponse(tool, borrowRepository.findByToolBorrowAndDateBorrowAfter(tool, new Date()) != null ? borrowRepository.findBytoolBorrow(tool).getDateReturn() : null, authentication == null || !authentication.isAuthenticated());
                     })
                     .toList();
         }
